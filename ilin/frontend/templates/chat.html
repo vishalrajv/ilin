@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}ILIN - Chat{% endblock %}
+{% block content %}
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>ILIN</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="active" data-section="topics">Topics</a>
+            <a href="#" data-section="history">Chat History</a>
+            <a href="#" onclick="logout(); return false;">Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content" style="padding: 0;">
+        <!-- Topics List -->
+        <section id="chat-topics-section" style="padding: 24px;">
+            <h2 class="mb-3">Select a Topic</h2>
+            <div id="chat-topics-grid" class="topics-grid"></div>
+        </section>
+
+        <!-- Chat Area -->
+        <section id="chat-area-section" class="hidden">
+            <div class="chat-layout">
+                <div class="chat-main">
+                    <div id="chat-header" class="flex-between" style="padding: 16px 20px; border-bottom: 1px solid #e1e5eb; background: var(--bg-card);">
+                        <h3 id="chat-topic-name"></h3>
+                        <button class="btn btn-outline" onclick="backToTopics()" style="padding: 6px 12px; font-size: 12px;">Back to Topics</button>
+                    </div>
+                    <div id="chat-messages" class="chat-messages"></div>
+                    <div class="chat-input-area">
+                        <textarea id="chat-input" placeholder="Type your question..." rows="1"></textarea>
+                        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- History Section -->
+        <section id="history-section" class="hidden" style="padding: 24px;">
+            <h2 class="mb-3">Chat History</h2>
+            <div id="history-list"></div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="/static/js/chat.js"></script>
+{% endblock %}
