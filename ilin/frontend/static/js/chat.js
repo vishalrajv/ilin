@@ -70,6 +70,7 @@ async function sendMessage() {
 
     try {
         const response = await fetch(url, {
+            method: 'POST',
             headers: { 'Authorization': `Bearer ${getToken()}` },
         });
         const reader = response.body.getReader();
