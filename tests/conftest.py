@@ -41,10 +41,13 @@ def client(db_session):
     """Create a test client with overridden DB dependency."""
     from fastapi import FastAPI
 
+    from ilin.api.admin_router import router as admin_router
     from ilin.api.auth_router import router as auth_router
 
     app = FastAPI()
     app.include_router(auth_router)
+    app.include_router(admin_router)
+    app.include_router(admin_router)
 
     def override_get_db():
         yield db_session
