@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skills": {
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "computedHash": "516bd2154eb843a8240e43d5b285229129853114ad7075a5e141e1c08e408c84"
+    },
+    "rag-architect": {
+      "source": "jeffallan/claude-skills",
+      "sourceType": "github",
+      "computedHash": "9e73a9440ca7f419a192901bf38e8c61e7449e0e9340b6f3507b85ca249dce42"
+    },
+    "rag-implementation": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "computedHash": "0a68c672384c5c6aa7acb286c18f8eb9dce53a058062a8951ac0adca4d01d4ea"
+    },
+    "ui-ux-pro-max": {
+      "source": "nextlevelbuilder/ui-ux-pro-max-skill",
+      "sourceType": "github",
+      "computedHash": "6337038fe1fe6bbe1b9f252ab678ee575859190bab6f0f246f4061824eb40875"
+    }
+  }
+}
