@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}ILIN - Login{% endblock %}
+{% block content %}
+<div class="login-container">
+    <div class="card login-card">
+        <h1>ILIN</h1>
+        <p>Integrated Local Intelligence Node</p>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-input" placeholder="Enter username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-input" placeholder="Enter password" required>
+            </div>
+            <div id="error-msg" class="error-msg hidden"></div>
+            <button type="submit" class="btn btn-primary mt-3">Sign In</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script>
+redirectIfLoggedIn();
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const errorEl = document.getElementById('error-msg');
+    errorEl.classList.add('hidden');
+
+    try {
+        const data = await login(username, password);
+        if (data.role === 'admin') {
+            window.location.href = '/admin';
+        } else {
+            window.location.href = '/chat';
+        }
+    } catch (err) {
+        errorEl.textContent = err.message;
+        errorEl.classList.remove('hidden');
+    }
+});
+</script>
+{% endblock %}
