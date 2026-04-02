@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}ILIN - Admin Dashboard{% endblock %}
+{% block content %}
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>ILIN Admin</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="active" data-section="topics">Topics</a>
+            <a href="#" data-section="users">Users</a>
+            <a href="#" onclick="logout(); return false;">Logout</a>
+        </nav>
+    </aside>
+    <main class="main-content">
+        <!-- Topics Section -->
+        <section id="topics-section">
+            <div class="flex-between mb-3">
+                <h2>Topics</h2>
+                <button class="btn btn-primary" onclick="showCreateTopic()">+ New Topic</button>
+            </div>
+            <div id="topics-grid" class="topics-grid"></div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users-section" class="hidden">
+            <div class="flex-between mb-3">
+                <h2>Users</h2>
+                <button class="btn btn-primary" onclick="showCreateUser()">+ New User</button>
+            </div>
+            <div id="users-list"></div>
+        </section>
+    </main>
+</div>
+
+<!-- Create Topic Modal -->
+<div id="topic-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3 id="modal-title">Create Topic</h3>
+        <form id="topic-form">
+            <div class="form-group">
+                <label for="topic-name">Topic Name</label>
+                <input type="text" id="topic-name" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="topic-desc">Description</label>
+                <textarea id="topic-desc" class="form-input" rows="3"></textarea>
+            </div>
+            <div class="flex gap-2" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-outline" onclick="closeModal('topic-modal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Create User Modal -->
+<div id="user-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3>Create User</h3>
+        <form id="user-form">
+            <div class="form-group">
+                <label for="user-username">Username</label>
+                <input type="text" id="user-username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="user-password">Password</label>
+                <input type="password" id="user-password" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="user-role">Role</label>
+                <select id="user-role" class="form-input">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+            </div>
+            <div class="flex gap-2" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-outline" onclick="closeModal('user-modal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Assign Users Modal -->
+<div id="assign-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3>Assign Users to Topic</h3>
+        <div id="assign-users-list" class="mb-3"></div>
+        <div class="flex gap-2" style="justify-content: flex-end;">
+            <button type="button" class="btn btn-outline" onclick="closeModal('assign-modal')">Cancel</button>
+            <button type="button" class="btn btn-primary" onclick="saveAssignments()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Upload Modal -->
+<div id="upload-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3>Upload Documents</h3>
+        <form id="upload-form">
+            <div class="form-group">
+                <label for="upload-files">Select Files (PDF, DOCX, TXT, PPTX, XLSX, MD)</label>
+                <input type="file" id="upload-files" class="form-input" multiple accept=".pdf,.docx,.txt,.pptx,.xlsx,.md,.markdown">
+            </div>
+            <div class="flex gap-2" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-outline" onclick="closeModal('upload-modal')">Cancel</button>
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </div>
+        </form>
+        <div id="upload-progress" class="mt-3"></div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="/static/js/admin.js"></script>
+{% endblock %}
