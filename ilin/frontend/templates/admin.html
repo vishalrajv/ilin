@@ -171,11 +171,18 @@
                                     </td>
                                     <td class="border-slate-700 py-6 px-8 text-slate-400 text-sm" x-text="new Date(user.created_at).toLocaleDateString()"></td>
                                     <td class="border-slate-700 py-6 px-8 text-right">
-                                        <button @click="deleteUser(user.id)" class="text-slate-500 hover:text-red-400 transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
+                                        <div class="flex justify-end gap-2">
+                                            <button @click="openModal('user', user)" class="text-slate-500 hover:text-blue-400 transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                </svg>
+                                            </button>
+                                            <button @click="deleteUser(user.id)" class="text-slate-500 hover:text-red-400 transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             </template>
@@ -221,8 +228,8 @@
     <div class="modal-background" @click="closeModal()"></div>
     <div class="modal-content">
         <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-            <h3 class="title is-4 has-text-white mb-8">Provision Authorized Entity</h3>
-            <form @submit.prevent="createUser()">
+            <h3 class="title is-4 has-text-white mb-8" x-text="isEdit ? 'Reconfigure Authorized Entity' : 'Provision Authorized Entity'"></h3>
+            <form @submit.prevent="saveUser()">
                 <div class="field mb-6">
                     <label class="label has-text-grey-light uppercase text-xs tracking-widest">Entity Identifier (Username)</label>
                     <div class="control">
@@ -232,7 +239,7 @@
                 <div class="field mb-6">
                     <label class="label has-text-grey-light uppercase text-xs tracking-widest">Access Cipher (Password)</label>
                     <div class="control">
-                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="password" x-model="userForm.password" required>
+                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="password" x-model="userForm.password" :required="!isEdit" :placeholder="isEdit ? 'Leave blank to keep unchanged' : ''">
                     </div>
                 </div>
                 <div class="field mb-8">
@@ -248,7 +255,7 @@
                 </div>
                 <div class="flex justify-end gap-3">
                     <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                    <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20">Provision</button>
+                    <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" x-text="isEdit ? 'Update' : 'Provision'"></button>
                 </div>
             </form>
         </div>
@@ -337,6 +344,8 @@ function adminApp() {
         users: [],
         activeModal: null,
         currentTopicId: null,
+        currentUserId: null,
+        isEdit: false,
         
         topicForm: { name: '', description: '' },
         userForm: { username: '', password: '', role: 'user' },
@@ -369,14 +378,29 @@ function adminApp() {
             this.users = await resp.json();
         },
 
-        openModal(type) {
+        openModal(type, data = null) {
             this.activeModal = type;
+            if (type === 'user') {
+                if (data) {
+                    this.isEdit = true;
+                    this.currentUserId = data.id;
+                    this.userForm = { username: data.username, password: '', role: data.role };
+                } else {
+                    this.isEdit = false;
+                    this.currentUserId = null;
+                    this.userForm = { username: '', password: '', role: 'user' };
+                }
+            }
         },
 
         closeModal() {
             this.activeModal = null;
             this.currentTopicId = null;
+            this.currentUserId = null;
+            this.isEdit = false;
             this.uploadFiles = [];
+            this.userForm = { username: '', password: '', role: 'user' };
+            this.topicForm = { name: '', description: '' };
         },
 
         async createTopic() {
@@ -407,24 +431,30 @@ function adminApp() {
             }
         },
 
-        async createUser() {
-            this.userError = '';
+        async saveUser() {
+            const method = this.isEdit ? 'PATCH' : 'POST';
+            const url = this.isEdit ? `/api/users/${this.currentUserId}` : '/api/users';
+            
+            let body = { ...this.userForm };
+            if (this.isEdit && !body.password) {
+                delete body.password;
+            }
+
             try {
-                const resp = await apiCall("/api/users", {
-                    method: 'POST',
-                    body: JSON.stringify(this.userForm),
+                const resp = await apiCall(url, {
+                    method: method,
+                    body: JSON.stringify(body),
                 });
                 
                 if (resp.ok) {
-                    this.userForm = { username: '', password: '', role: 'user' };
                     this.closeModal();
                     await this.loadUsers();
                 } else {
                     const data = await resp.json();
-                    this.userError = data.detail || "Failed to provision entity. Please try again.";
+                    alert(data.detail || (Array.isArray(data.detail) ? data.detail[0].msg : data.detail) || "Failed to save entity.");
                 }
             } catch (error) {
-                this.userError = "Network error occurred. Please try again.";
+                alert("Network error occurred. Please try again.");
             }
         },
 
