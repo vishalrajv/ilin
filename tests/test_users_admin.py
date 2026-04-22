@@ -147,3 +147,28 @@ def test_update_user_not_found(client, admin_user):
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == 404
+
+
+def test_create_user_success(client, admin_user):
+    """Admin can create a new user."""
+    token = _get_token(client, "admin", "admin123")
+    response = client.post(
+        "/api/users",
+        json={"username": "new_entity", "password": "securepassword123", "role": "user"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 201
+    data = response.json()
+    assert data["username"] == "new_entity"
+    assert data["role"] == "user"
+
+
+def test_create_user_duplicate(client, admin_user, regular_user):
+    """Cannot create user with existing username."""
+    token = _get_token(client, "admin", "admin123")
+    response = client.post(
+        "/api/users",
+        json={"username": "testuser", "password": "password123", "role": "user"},
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert response.status_code == 409
