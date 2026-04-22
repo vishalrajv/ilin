@@ -1,7 +1,7 @@
 # Implementation Plan: Admin User Management and 'Add User' Functionality
 
 ## Phase 1: Backend API Enhancements
-- [ ] Task: Implement Delete User Endpoint
+- [x] Task: Implement Delete User Endpoint e52d72b
     - [ ] Write failing test for \DELETE /api/users/{user_id}\ in \	ests/test_users_admin.py\
     - [ ] Implement \delete_user\ in \ilin/api/admin_router.py\ (ensure TopicAssignment cleanup and self-delete protection)
     - [ ] Verify tests pass and coverage >50%
