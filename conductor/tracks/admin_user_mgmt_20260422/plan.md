@@ -21,9 +21,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2: Frontend Integration' (Protocol in workflow.md) 326bc54
 
 ## Phase 3: Validation & Error Handling
-- [ ] Task: Client-side Validation
+- [x] Task: Client-side Validation b3ec8cf
     - [ ] Add username and password strength validation in \dmin.html\
-- [ ] Task: API Error Handling
+- [x] Task: API Error Handling b3ec8cf
     - [ ] Display actionable error messages in the user modal (e.g., duplicate username)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Validation & Error Handling' (Protocol in workflow.md)
 
