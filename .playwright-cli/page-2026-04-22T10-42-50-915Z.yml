@@ -1,0 +1,65 @@
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: A
+        - heading "ILIN Admin" [level=2] [ref=e7]
+      - navigation [ref=e8]:
+        - button "Node Overview" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Node Overview
+        - button "Knowledge Bases" [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Knowledge Bases
+        - button "Authorized Users" [ref=e17] [cursor=pointer]:
+          - img [ref=e18]
+          - generic [ref=e20]: Authorized Users
+      - button "Terminate Session" [ref=e22] [cursor=pointer]:
+        - img [ref=e23]
+        - generic [ref=e25]: Terminate Session
+    - main [ref=e26]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - heading "Authorized Entities" [level=1] [ref=e49]
+            - paragraph [ref=e50]: Manage access protocols for node intelligence.
+          - button "+ Add User" [active] [ref=e51] [cursor=pointer]
+        - table [ref=e53]:
+          - rowgroup [ref=e54]:
+            - row "Identifier Protocol Level Initialized At Actions" [ref=e55]:
+              - columnheader "Identifier" [ref=e56]
+              - columnheader "Protocol Level" [ref=e57]
+              - columnheader "Initialized At" [ref=e58]
+              - columnheader "Actions" [ref=e59]
+          - rowgroup [ref=e60]:
+            - row "A admin admin 4/3/2026" [ref=e61]:
+              - cell "A admin" [ref=e62]:
+                - generic [ref=e63]:
+                  - generic [ref=e64]: A
+                  - generic [ref=e65]: admin
+              - cell "admin" [ref=e66]:
+                - generic [ref=e67]: admin
+              - cell "4/3/2026" [ref=e68]
+              - cell [ref=e69]:
+                - generic [ref=e70]:
+                  - button [ref=e71] [cursor=pointer]:
+                    - img [ref=e72]
+                  - button [ref=e74] [cursor=pointer]:
+                    - img [ref=e75]
+  - generic [ref=e80]:
+    - heading "Add New User" [level=3] [ref=e81]
+    - generic [ref=e82]:
+      - generic [ref=e83]:
+        - generic [ref=e84]: Username
+        - textbox [ref=e86]
+      - generic [ref=e87]:
+        - generic [ref=e88]: Password
+        - textbox [ref=e90]
+      - generic [ref=e91]:
+        - generic [ref=e92]: Access Role
+        - combobox [ref=e95] [cursor=pointer]:
+          - option "Standard Agent" [selected]
+          - option "Cluster Administrator"
+      - generic [ref=e96]:
+        - button "Abort" [ref=e97] [cursor=pointer]
+        - button "Add User" [ref=e98] [cursor=pointer]

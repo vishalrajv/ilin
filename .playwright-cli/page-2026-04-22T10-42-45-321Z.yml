@@ -1,0 +1,34 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: A
+      - heading "ILIN Admin" [level=2] [ref=e7]
+    - navigation [ref=e8]:
+      - button "Node Overview" [ref=e9] [cursor=pointer]:
+        - img [ref=e10]
+        - generic [ref=e12]: Node Overview
+      - button "Knowledge Bases" [ref=e13] [cursor=pointer]:
+        - img [ref=e14]
+        - generic [ref=e16]: Knowledge Bases
+      - button "Authorized Users" [ref=e17] [cursor=pointer]:
+        - img [ref=e18]
+        - generic [ref=e20]: Authorized Users
+    - button "Terminate Session" [ref=e22] [cursor=pointer]:
+      - img [ref=e23]
+      - generic [ref=e25]: Terminate Session
+  - main [ref=e26]:
+    - generic [ref=e28]:
+      - generic [ref=e29]:
+        - heading "Node Overview" [level=1] [ref=e30]
+        - paragraph [ref=e31]: System analytics and intelligence distribution.
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - paragraph [ref=e34]: Total Knowledge Bases
+          - paragraph [ref=e35]: "0"
+        - generic [ref=e36]:
+          - paragraph [ref=e37]: Total Indexed Docs
+          - paragraph [ref=e38]: "0"
+        - generic [ref=e39]:
+          - paragraph [ref=e40]: Authorized Entities
+          - paragraph [ref=e41]: "1"
+      - heading "Intelligence Distribution" [level=3] [ref=e43]
