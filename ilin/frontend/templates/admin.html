@@ -171,7 +171,7 @@
                                     </td>
                                     <td class="border-slate-700 py-6 px-8 text-slate-400 text-sm" x-text="new Date(user.created_at).toLocaleDateString()"></td>
                                     <td class="border-slate-700 py-6 px-8 text-right">
-                                        <button class="text-slate-500 hover:text-red-400 transition-colors">
+                                        <button @click="deleteUser(user.id)" class="text-slate-500 hover:text-red-400 transition-colors">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                             </svg>
@@ -396,15 +396,35 @@ function adminApp() {
             if (resp.ok) await this.loadTopics();
         },
 
-        async createUser() {
-            const resp = await apiCall("/api/users", {
-                method: 'POST',
-                body: JSON.stringify(this.userForm),
-            });
+        async deleteUser(id) {
+            if (!confirm('Danger: Permanently remove this entity and all associated access rights?')) return;
+            const resp = await apiCall(`/api/users/${id}`, { method: 'DELETE' });
             if (resp.ok) {
-                this.userForm = { username: '', password: '', role: 'user' };
-                this.closeModal();
                 await this.loadUsers();
+            } else {
+                const data = await resp.json();
+                alert(data.detail || "Failed to remove entity.");
+            }
+        },
+
+        async createUser() {
+            this.userError = '';
+            try {
+                const resp = await apiCall("/api/users", {
+                    method: 'POST',
+                    body: JSON.stringify(this.userForm),
+                });
+                
+                if (resp.ok) {
+                    this.userForm = { username: '', password: '', role: 'user' };
+                    this.closeModal();
+                    await this.loadUsers();
+                } else {
+                    const data = await resp.json();
+                    this.userError = data.detail || "Failed to provision entity. Please try again.";
+                }
+            } catch (error) {
+                this.userError = "Network error occurred. Please try again.";
             }
         },
 
@@ -505,6 +525,11 @@ function adminApp() {
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+.bg-slate-750 { background-color: #262a33; }
+</style>
+{% endblock %}
+scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
 .bg-slate-750 { background-color: #262a33; }
 </style>
