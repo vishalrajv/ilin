@@ -56,3 +56,33 @@ class UserResponse(BaseModel):
     created_at: str | None = None
 
     model_config = {"from_attributes": True}
+
+
+class UserUpdate(BaseModel):
+    """Admin user update request."""
+
+    username: str | None = Field(None, min_length=3, max_length=50)
+    password: str | None = Field(None, min_length=8)
+    role: str | None = None
+
+    @field_validator('username')
+    @classmethod
+    def validate_username(cls, v):
+        """Validate username if provided."""
+        if v is None:
+            return v
+        if not v.islower():
+            raise ValueError('Username must be lowercase')
+        if not all(c.isalnum() or c == '_' for c in v):
+            raise ValueError('Username must contain only alphanumeric characters and underscores')
+        return v
+
+    @field_validator('role')
+    @classmethod
+    def validate_role(cls, v):
+        """Validate role if provided."""
+        if v is None:
+            return v
+        if v not in {'user', 'admin'}:
+            raise ValueError('Role must be either "user" or "admin"')
+        return v

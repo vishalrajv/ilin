@@ -9,7 +9,7 @@ from fastapi import APIRouter, Body, Depends, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
 from ilin.api.dependencies import get_current_user, get_db, require_admin
-from ilin.auth.models import UserCreate, UserResponse
+from ilin.auth.models import UserCreate, UserResponse, UserUpdate
 from ilin.auth.service import hash_password
 from ilin.config import settings
 from ilin.storage.file_store import (
@@ -90,6 +90,44 @@ def delete_user(
     db.delete(user)
     db.commit()
     return {"message": "User deleted"}
+
+
+@router.patch("/users/{user_id}", response_model=UserResponse)
+def update_user(
+    user_id: int,
+    request: UserUpdate,
+    admin: User = Depends(require_admin),
+    db: Session = Depends(get_db),
+):
+    """Update a user's information (admin only)."""
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    if request.username:
+        existing = (
+            db.query(User)
+            .filter(User.username == request.username, User.id != user_id)
+            .first()
+        )
+        if existing:
+            raise HTTPException(status_code=409, detail="Username already exists")
+        user.username = request.username
+
+    if request.password:
+        user.password_hash = hash_password(request.password)
+
+    if request.role:
+        user.role = request.role
+
+    db.commit()
+    db.refresh(user)
+    return UserResponse(
+        id=user.id,
+        username=user.username,
+        role=user.role,
+        created_at=str(user.created_at),
+    )
 
 
 # --- Topic Management ---
