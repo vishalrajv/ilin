@@ -16,7 +16,8 @@
 
 ## Frontend
 - **Jinja2**: Server-side HTML templating engine.
-- **Vanilla HTML/CSS/JS**: Client-side rendering and interactivity.
+- **Alpine.js & Chart.js**: For lightweight client-side reactivity and data visualization in the admin dashboard.
+- **Vanilla HTML/CSS/JS**: Core client-side structure and styling.
 
 ## Authentication & Security
 - **PyJWT & bcrypt**: Used for secure token generation and password hashing.
