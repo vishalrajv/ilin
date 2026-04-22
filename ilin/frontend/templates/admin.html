@@ -190,149 +190,148 @@
                     </table>
                 </div>
             </section>
-
         </div>
     </main>
-</div>
 
-<!-- Topic Modal -->
-<div class="modal" :class="activeModal === 'topic' ? 'is-active' : ''" x-cloak>
-    <div class="modal-background" @click="closeModal()"></div>
-    <div class="modal-content">
-        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-            <h3 class="title is-4 has-text-white mb-8">Initialize Intelligence Cluster</h3>
-            <form @submit.prevent="createTopic()">
-                <div class="field mb-6">
-                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Name</label>
-                    <div class="control">
-                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="topicForm.name" required>
-                    </div>
-                </div>
-                <div class="field mb-8">
-                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Schema (Description)</label>
-                    <div class="control">
-                        <textarea class="textarea bg-slate-700 border-slate-600 text-white" x-model="topicForm.description" rows="3"></textarea>
-                    </div>
-                </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                    <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20">Initialize</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!-- User Modal -->
-<div class="modal" :class="activeModal === 'user' ? 'is-active' : ''" x-cloak>
-    <div class="modal-background" @click="closeModal()"></div>
-    <div class="modal-content">
-        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-            <h3 class="title is-4 has-text-white mb-8" x-text="isEdit ? 'Reconfigure Authorized Entity' : 'Provision Authorized Entity'"></h3>
-            <form @submit.prevent="saveUser()">
-                <div class="field mb-6">
-                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Entity Identifier (Username)</label>
-                    <div class="control">
-                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="userForm.username" required>
-                    </div>
-                </div>
-                <div class="field mb-6">
-                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Access Cipher (Password)</label>
-                    <div class="control">
-                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="password" x-model="userForm.password" :required="!isEdit" :placeholder="isEdit ? 'Leave blank to keep unchanged' : ''">
-                    </div>
-                </div>
-                <div class="field mb-8">
-                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Protocol Clearance (Role)</label>
-                    <div class="control">
-                        <div class="select is-fullwidth">
-                            <select class="bg-slate-700 border-slate-600 text-white" x-model="userForm.role">
-                                <option value="user">Standard Agent</option>
-                                <option value="admin">Cluster Administrator</option>
-                            </select>
+    <!-- Topic Modal -->
+    <div class="modal" :class="activeModal === 'topic' ? 'is-active' : ''" x-cloak>
+        <div class="modal-background" @click="closeModal()"></div>
+        <div class="modal-content">
+            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+                <h3 class="title is-4 has-text-white mb-8">Initialize Intelligence Cluster</h3>
+                <form @submit.prevent="createTopic()">
+                    <div class="field mb-6">
+                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Name</label>
+                        <div class="control">
+                            <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="topicForm.name" required>
                         </div>
                     </div>
-                </div>
-
-                <!-- Validation Error Display -->
-                <div x-show="userValidationError" class="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs font-bold" x-text="userValidationError"></div>
-
-                <div class="flex justify-end gap-3">
-                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                    <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" x-text="isEdit ? 'Update' : 'Provision'" :disabled="userValidationError"></button>
-                </div>
-            </form>
+                    <div class="field mb-8">
+                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Schema (Description)</label>
+                        <div class="control">
+                            <textarea class="textarea bg-slate-700 border-slate-600 text-white" x-model="topicForm.description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
+                        <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20">Initialize</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-<!-- Assign Modal -->
-<div class="modal" :class="activeModal === 'assign' ? 'is-active' : ''" x-cloak>
-    <div class="modal-background" @click="closeModal()"></div>
-    <div class="modal-content">
-        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-            <h3 class="title is-4 has-text-white mb-8">Configure Access Protocols</h3>
-            <div class="space-y-4 max-h-96 overflow-y-auto mb-8 pr-4 custom-scrollbar">
-                <template x-for="user in users" :key="user.id">
-                    <label class="flex items-center justify-between p-4 bg-slate-750 rounded-xl cursor-pointer border border-transparent hover:border-slate-500 transition-all">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs" x-text="user.username[0].toUpperCase()"></div>
-                            <div>
-                                <div class="font-bold text-sm" x-text="user.username"></div>
-                                <div class="text-[10px] uppercase text-slate-500 tracking-widest font-bold" x-text="user.role"></div>
+    <!-- User Modal -->
+    <div class="modal" :class="activeModal === 'user' ? 'is-active' : ''" x-cloak>
+        <div class="modal-background" @click="closeModal()"></div>
+        <div class="modal-content">
+            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+                <h3 class="title is-4 has-text-white mb-8" x-text="isEdit ? 'Update User Details' : 'Add New User'"></h3>
+                <form @submit.prevent="saveUser()">
+                    <div class="field mb-6">
+                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Username</label>
+                        <div class="control">
+                            <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="userForm.username" required>
+                        </div>
+                    </div>
+                    <div class="field mb-6">
+                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Password</label>
+                        <div class="control">
+                            <input class="input bg-slate-700 border-slate-600 text-white h-12" type="password" x-model="userForm.password" :required="!isEdit" :placeholder="isEdit ? 'Leave blank to keep unchanged' : ''">
+                        </div>
+                    </div>
+                    <div class="field mb-8">
+                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Access Role</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select class="bg-slate-700 border-slate-600 text-white" x-model="userForm.role">
+                                    <option value="user">Standard Agent</option>
+                                    <option value="admin">Cluster Administrator</option>
+                                </select>
                             </div>
                         </div>
-                        <input type="checkbox" class="w-5 h-5 accent-blue-500" :value="user.id" x-model="assignedUserIds">
-                    </label>
-                </template>
-            </div>
-            <div class="flex justify-end gap-3">
-                <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="saveAssignments()">Apply Protocols</button>
+                    </div>
+
+                    <!-- Validation Error Display -->
+                    <div x-show="userValidationError" class="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs font-bold" x-text="userValidationError"></div>
+
+                    <div class="flex justify-end gap-3">
+                        <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
+                        <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" x-text="isEdit ? 'Update' : 'Add User'" :disabled="userValidationError"></button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-</div>
 
-<!-- Upload Modal -->
-<div class="modal" :class="activeModal === 'upload' ? 'is-active' : ''" x-cloak>
-    <div class="modal-background" @click="closeModal()"></div>
-    <div class="modal-content">
-        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-            <h3 class="title is-4 has-text-white mb-8">Ingest Intelligence Feed</h3>
-            <div class="bg-slate-700/50 border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center mb-8 hover:border-blue-500 transition-all group">
-                <input type="file" id="upload-files" multiple class="hidden" @change="handleFileSelect">
-                <label for="upload-files" class="cursor-pointer">
-                    <div class="w-16 h-16 bg-slate-700 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:bg-blue-600 transition-colors shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                    </div>
-                    <p class="font-bold text-lg mb-1">Upload Data Packets</p>
-                    <p class="text-xs text-slate-400 uppercase tracking-widest">PDF, DOCX, TXT, PPTX, XLSX, MD</p>
-                </label>
-            </div>
-
-            <div x-show="uploadFiles.length > 0" class="mb-8 space-y-3">
-                <template x-for="(file, index) in uploadFiles" :key="index">
-                    <div class="flex items-center justify-between p-3 bg-slate-750 rounded-lg text-sm">
-                        <span class="truncate pr-4" x-text="file.name"></span>
-                        <span class="text-slate-500 text-xs flex-shrink-0" x-text="`${(file.size / 1024).toFixed(1)} KB`"></span>
-                    </div>
-                </template>
-            </div>
-
-            <div x-show="isUploading" class="mb-8">
-                <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-2">
-                    <span class="text-blue-400">Ingesting Intelligence...</span>
-                    <span x-text="`${uploadProgress}%`"></p>
+    <!-- Assign Modal -->
+    <div class="modal" :class="activeModal === 'assign' ? 'is-active' : ''" x-cloak>
+        <div class="modal-background" @click="closeModal()"></div>
+        <div class="modal-content">
+            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+                <h3 class="title is-4 has-text-white mb-8">Configure Access Protocols</h3>
+                <div class="space-y-4 max-h-96 overflow-y-auto mb-8 pr-4 custom-scrollbar">
+                    <template x-for="user in users" :key="user.id">
+                        <label class="flex items-center justify-between p-4 bg-slate-750 rounded-xl cursor-pointer border border-transparent hover:border-slate-500 transition-all">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs" x-text="user.username[0].toUpperCase()"></div>
+                                <div>
+                                    <div class="font-bold text-sm" x-text="user.username"></div>
+                                    <div class="text-[10px] uppercase text-slate-500 tracking-widest font-bold" x-text="user.role"></div>
+                                </div>
+                            </div>
+                            <input type="checkbox" class="w-5 h-5 accent-blue-500" :value="user.id" x-model="assignedUserIds">
+                        </label>
+                    </template>
                 </div>
-                <progress class="progress is-link is-small" :value="uploadProgress" max="100"></progress>
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
+                    <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="saveAssignments()">Apply Protocols</button>
+                </div>
             </div>
+        </div>
+    </div>
 
-            <div class="flex justify-end gap-3">
-                <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()" :disabled="isUploading">Abort</button>
-                <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="uploadDocuments()" :disabled="isUploading || uploadFiles.length === 0">Sync Node</button>
+    <!-- Upload Modal -->
+    <div class="modal" :class="activeModal === 'upload' ? 'is-active' : ''" x-cloak>
+        <div class="modal-background" @click="closeModal()"></div>
+        <div class="modal-content">
+            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+                <h3 class="title is-4 has-text-white mb-8">Ingest Intelligence Feed</h3>
+                <div class="bg-slate-700/50 border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center mb-8 hover:border-blue-500 transition-all group">
+                    <input type="file" id="upload-files" multiple class="hidden" @change="handleFileSelect">
+                    <label for="upload-files" class="cursor-pointer">
+                        <div class="w-16 h-16 bg-slate-700 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:bg-blue-600 transition-colors shadow-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                        </div>
+                        <p class="font-bold text-lg mb-1">Upload Data Packets</p>
+                        <p class="text-xs text-slate-400 uppercase tracking-widest">PDF, DOCX, TXT, PPTX, XLSX, MD</p>
+                    </label>
+                </div>
+
+                <div x-show="uploadFiles.length > 0" class="mb-8 space-y-3">
+                    <template x-for="(file, index) in uploadFiles" :key="index">
+                        <div class="flex items-center justify-between p-3 bg-slate-750 rounded-lg text-sm">
+                            <span class="truncate pr-4" x-text="file.name"></span>
+                            <span class="text-slate-500 text-xs flex-shrink-0" x-text="`${(file.size / 1024).toFixed(1)} KB`"></span>
+                        </div>
+                    </template>
+                </div>
+
+                <div x-show="isUploading" class="mb-8">
+                    <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-2">
+                        <span class="text-blue-400">Ingesting Intelligence...</span>
+                        <span x-text="`${uploadProgress}%`"></p>
+                    </div>
+                    <progress class="progress is-link is-small" :value="uploadProgress" max="100"></progress>
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()" :disabled="isUploading">Abort</button>
+                    <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="uploadDocuments()" :disabled="isUploading || uploadFiles.length === 0">Sync Node</button>
+                </div>
             </div>
         </div>
     </div>
@@ -356,9 +355,11 @@ function adminApp() {
         assignedUserIds: [],
         
         get userValidationError() {
-            if (this.userForm.username.length > 0 && this.userForm.username.length < 3) return "Identifier too short (min 3 chars).";
-            if (this.userForm.username && !/^[a-z0-9_]+$/.test(this.userForm.username)) return "Use lowercase alphanumeric or underscores.";
-            if (this.userForm.password.length > 0 && this.userForm.password.length < 8) return "Access Cipher too weak (min 8 chars).";
+            if (!this.userForm.username) return null; // Don't show error until they start typing or try to submit
+            if (this.userForm.username.length < 3) return "Username too short (min 3 chars).";
+            if (!/^[a-z0-9_]+$/.test(this.userForm.username)) return "Username must be lowercase alphanumeric or underscores.";
+            if (!this.isEdit && !this.userForm.password) return null; 
+            if (this.userForm.password && this.userForm.password.length < 8) return "Password too weak (min 8 chars).";
             return null;
         },
         
@@ -373,20 +374,27 @@ function adminApp() {
             if (!isAdmin()) {
                 window.location.href = "/chat";
             }
-            await this.loadTopics();
-            await this.loadUsers();
-            this.renderChart();
+            try {
+                await this.loadTopics();
+                await this.loadUsers();
+            } catch (error) {
+                console.error("Initialization failed:", error);
+            }
         },
 
         async loadTopics() {
             const resp = await apiCall("/api/topics");
-            this.topics = await resp.json();
-            if (this.chart) this.updateChart();
+            if (resp && resp.ok) {
+                this.topics = await resp.json();
+                this.$nextTick(() => this.renderChart());
+            }
         },
 
         async loadUsers() {
             const resp = await apiCall("/api/users");
-            this.users = await resp.json();
+            if (resp && resp.ok) {
+                this.users = await resp.json();
+            }
         },
 
         openModal(type, data = null) {
@@ -418,7 +426,7 @@ function adminApp() {
             const name = this.topicForm.name;
             const description = this.topicForm.description;
             const resp = await apiCall(`/api/topics?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`, { method: 'POST' });
-            if (resp.ok) {
+            if (resp && resp.ok) {
                 this.topicForm = { name: '', description: '' };
                 this.closeModal();
                 await this.loadTopics();
@@ -428,21 +436,27 @@ function adminApp() {
         async deleteTopic(id) {
             if (!confirm('Critical: Permanently purge this intelligence cluster and all indexed documents?')) return;
             const resp = await apiCall(`/api/topics/${id}`, { method: 'DELETE' });
-            if (resp.ok) await this.loadTopics();
+            if (resp && resp.ok) await this.loadTopics();
         },
 
         async deleteUser(id) {
-            if (!confirm('Danger: Permanently remove this entity and all associated access rights?')) return;
+            if (!confirm('Danger: Permanently remove this user and all associated access rights?')) return;
             const resp = await apiCall(`/api/users/${id}`, { method: 'DELETE' });
-            if (resp.ok) {
+            if (resp && resp.ok) {
                 await this.loadUsers();
-            } else {
+            } else if (resp) {
                 const data = await resp.json();
-                alert(data.detail || "Failed to remove entity.");
+                alert(data.detail || "Failed to remove user.");
             }
         },
 
         async saveUser() {
+            // Final validation check before submit
+            if (!this.userForm.username) { alert("Username is required."); return; }
+            if (this.userForm.username.length < 3) { alert("Username too short."); return; }
+            if (!this.isEdit && !this.userForm.password) { alert("Password is required."); return; }
+            if (!this.isEdit && this.userForm.password.length < 8) { alert("Password too short (min 8 chars)."); return; }
+            
             const method = this.isEdit ? 'PATCH' : 'POST';
             const url = this.isEdit ? `/api/users/${this.currentUserId}` : '/api/users';
             
@@ -457,15 +471,25 @@ function adminApp() {
                     body: JSON.stringify(body),
                 });
                 
+                if (!resp) return;
+
                 if (resp.ok) {
                     this.closeModal();
                     await this.loadUsers();
                 } else {
                     const data = await resp.json();
-                    alert(data.detail || (Array.isArray(data.detail) ? data.detail[0].msg : data.detail) || "Failed to save entity.");
+                    let errorMsg = "Failed to save user.";
+                    if (data.detail) {
+                        if (Array.isArray(data.detail)) {
+                            errorMsg = data.detail.map(d => d.msg || d).join(", ");
+                        } else {
+                            errorMsg = data.detail;
+                        }
+                    }
+                    alert(errorMsg);
                 }
             } catch (error) {
-                alert("Network error occurred. Please try again.");
+                alert("Network error occurred: " + error.message);
             }
         },
 
@@ -520,44 +544,59 @@ function adminApp() {
         },
 
         renderChart() {
-            const ctx = document.getElementById('topicsChart').getContext('2d');
-            this.chart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: this.topics.map(t => t.name),
-                    datasets: [{
-                        label: 'Indexed Documents',
-                        data: this.topics.map(t => t.document_count),
-                        backgroundColor: '#3e8ed0',
-                        borderRadius: 8,
-                        borderSkipped: false,
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
+            const canvas = document.getElementById('topicsChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            if (this.chart) {
+                this.chart.destroy();
+            }
+
+            try {
+                this.chart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: this.topics.map(t => t.name),
+                        datasets: [{
+                            label: 'Indexed Documents',
+                            data: this.topics.map(t => t.document_count),
+                            backgroundColor: '#3e8ed0',
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(255,255,255,0.05)' },
-                            ticks: { color: '#94a3b8' }
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
                         },
-                        x: {
-                            grid: { display: false },
-                            ticks: { color: '#94a3b8' }
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(255,255,255,0.05)' },
+                                ticks: { color: '#94a3b8' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8' }
+                            }
                         }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.error("Chart rendering failed:", error);
+            }
         },
 
         updateChart() {
-            this.chart.data.labels = this.topics.map(t => t.name);
-            this.chart.data.datasets[0].data = this.topics.map(t => t.document_count);
-            this.chart.update();
+            if (this.chart) {
+                this.chart.data.labels = this.topics.map(t => t.name);
+                this.chart.data.datasets[0].data = this.topics.map(t => t.document_count);
+                this.chart.update();
+            } else {
+                this.renderChart();
+            }
         }
     }
 }
