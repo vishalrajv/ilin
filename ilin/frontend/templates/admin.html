@@ -1,117 +1,511 @@
 {% extends "base.html" %}
-{% block title %}ILIN - Admin Dashboard{% endblock %}
+{% block title %}ILIN - Admin Terminal{% endblock %}
 {% block content %}
-<div class="app-layout">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>ILIN Admin</h2>
+<div class="flex h-screen bg-slate-900 text-slate-100 overflow-hidden" x-data="adminApp()" x-init="init()">
+    <!-- Sidebar -->
+    <aside class="w-72 bg-slate-800 flex flex-col border-r border-slate-700 shadow-xl transition-all">
+        <div class="p-6 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg">A</div>
+            <h2 class="text-xl font-bold tracking-tight">ILIN Admin</h2>
         </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="active" data-section="topics">Topics</a>
-            <a href="#" data-section="users">Users</a>
-            <a href="#" onclick="logout(); return false;">Logout</a>
+        
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+            <button 
+                @click="section = 'overview'" 
+                class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
+                :class="section === 'overview' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                <span>Node Overview</span>
+            </button>
+            <button 
+                @click="section = 'topics'" 
+                class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
+                :class="section === 'topics' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <span>Knowledge Bases</span>
+            </button>
+            <button 
+                @click="section = 'users'; loadUsers()" 
+                class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
+                :class="section === 'users' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span>Authorized Users</span>
+            </button>
         </nav>
-    </aside>
-    <main class="main-content">
-        <!-- Topics Section -->
-        <section id="topics-section">
-            <div class="flex-between mb-3">
-                <h2>Topics</h2>
-                <button class="btn btn-primary" onclick="showCreateTopic()">+ New Topic</button>
-            </div>
-            <div id="topics-grid" class="topics-grid"></div>
-        </section>
 
-        <!-- Users Section -->
-        <section id="users-section" class="hidden">
-            <div class="flex-between mb-3">
-                <h2>Users</h2>
-                <button class="btn btn-primary" onclick="showCreateUser()">+ New User</button>
-            </div>
-            <div id="users-list"></div>
-        </section>
+        <div class="p-4 border-t border-slate-700">
+            <button onclick="logout()" class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 flex items-center gap-3 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Terminate Session</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-y-auto bg-slate-900 p-12">
+        <div class="max-w-6xl mx-auto w-full">
+            
+            <!-- Overview Section -->
+            <section x-show="section === 'overview'" x-cloak>
+                <div class="mb-12">
+                    <h1 class="text-4xl font-bold mb-3 tracking-tight">Node Overview</h1>
+                    <p class="text-slate-400 text-lg">System analytics and intelligence distribution.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Total Knowledge Bases</p>
+                        <p class="text-4xl font-bold text-blue-400" x-text="topics.length"></p>
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Total Indexed Docs</p>
+                        <p class="text-4xl font-bold text-green-400" x-text="topics.reduce((acc, t) => acc + t.document_count, 0)"></p>
+                    </div>
+                    <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
+                        <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Authorized Entities</p>
+                        <p class="text-4xl font-bold text-purple-400" x-text="users.length"></p>
+                    </div>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
+                    <h3 class="text-xl font-bold mb-8">Intelligence Distribution</h3>
+                    <div class="h-80 w-full">
+                        <canvas id="topicsChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Topics Section -->
+            <section x-show="section === 'topics'" x-cloak>
+                <div class="flex items-center justify-between mb-12">
+                    <div>
+                        <h1 class="text-4xl font-bold mb-3 tracking-tight">Knowledge Bases</h1>
+                        <p class="text-slate-400 text-lg">Manage node intelligence clusters and indexed datasets.</p>
+                    </div>
+                    <button @click="openModal('topic')" class="button is-link font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-600/20">
+                        + Initialize Cluster
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <template x-for="topic in topics" :key="topic.id">
+                        <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl group hover:border-slate-500 transition-all shadow-sm">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-xl font-bold mb-1" x-text="topic.name"></h3>
+                                    <p class="text-slate-400 text-sm line-clamp-2" x-text="topic.description || 'No cluster description provided.'"></p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button @click="deleteTopic(topic.id)" class="p-2 text-slate-500 hover:text-red-400 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center gap-4 text-xs font-medium text-slate-500 uppercase tracking-widest mb-6">
+                                <span class="bg-slate-700 px-2 py-1 rounded" x-text="`${topic.document_count} Documents`"></span>
+                                <span class="bg-slate-700 px-2 py-1 rounded" x-text="`${topic.user_count} Authorized Users`"></span>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button @click="showUpload(topic.id)" class="button is-small is-dark is-outlined flex-1 font-bold rounded-lg border-slate-600">
+                                    Sync Docs
+                                </button>
+                                <button @click="showAssign(topic.id)" class="button is-small is-dark is-outlined flex-1 font-bold rounded-lg border-slate-600">
+                                    Access Rights
+                                </button>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section x-show="section === 'users'" x-cloak>
+                <div class="flex items-center justify-between mb-12">
+                    <div>
+                        <h1 class="text-4xl font-bold mb-3 tracking-tight">Authorized Entities</h1>
+                        <p class="text-slate-400 text-lg">Manage access protocols for node intelligence.</p>
+                    </div>
+                    <button @click="openModal('user')" class="button is-link font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-600/20">
+                        + Provision Entity
+                    </button>
+                </div>
+
+                <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-sm">
+                    <table class="table is-fullwidth bg-transparent text-slate-100">
+                        <thead>
+                            <tr class="bg-slate-750">
+                                <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Identifier</th>
+                                <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Protocol Level</th>
+                                <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Initialized At</th>
+                                <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <template x-for="user in users" :key="user.id">
+                                <tr class="hover:bg-slate-750/50 transition-colors">
+                                    <td class="border-slate-700 py-6 px-8">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs" x-text="user.username[0].toUpperCase()"></div>
+                                            <span class="font-medium" x-text="user.username"></span>
+                                        </div>
+                                    </td>
+                                    <td class="border-slate-700 py-6 px-8">
+                                        <span class="tag is-rounded font-bold px-3 uppercase text-[10px] tracking-widest"
+                                              :class="user.role === 'admin' ? 'is-danger is-light' : 'is-info is-light'"
+                                              x-text="user.role"></span>
+                                    </td>
+                                    <td class="border-slate-700 py-6 px-8 text-slate-400 text-sm" x-text="new Date(user.created_at).toLocaleDateString()"></td>
+                                    <td class="border-slate-700 py-6 px-8 text-right">
+                                        <button class="text-slate-500 hover:text-red-400 transition-colors">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
     </main>
 </div>
 
-<!-- Create Topic Modal -->
-<div id="topic-modal" class="modal-overlay hidden">
-    <div class="modal">
-        <h3 id="modal-title">Create Topic</h3>
-        <form id="topic-form">
-            <div class="form-group">
-                <label for="topic-name">Topic Name</label>
-                <input type="text" id="topic-name" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="topic-desc">Description</label>
-                <textarea id="topic-desc" class="form-input" rows="3"></textarea>
-            </div>
-            <div class="flex gap-2" style="justify-content: flex-end;">
-                <button type="button" class="btn btn-outline" onclick="closeModal('topic-modal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
+<!-- Topic Modal -->
+<div class="modal" :class="activeModal === 'topic' ? 'is-active' : ''" x-cloak>
+    <div class="modal-background" @click="closeModal()"></div>
+    <div class="modal-content">
+        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+            <h3 class="title is-4 has-text-white mb-8">Initialize Intelligence Cluster</h3>
+            <form @submit.prevent="createTopic()">
+                <div class="field mb-6">
+                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Name</label>
+                    <div class="control">
+                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="topicForm.name" required>
+                    </div>
+                </div>
+                <div class="field mb-8">
+                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Schema (Description)</label>
+                    <div class="control">
+                        <textarea class="textarea bg-slate-700 border-slate-600 text-white" x-model="topicForm.description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
+                    <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20">Initialize</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Create User Modal -->
-<div id="user-modal" class="modal-overlay hidden">
-    <div class="modal">
-        <h3>Create User</h3>
-        <form id="user-form">
-            <div class="form-group">
-                <label for="user-username">Username</label>
-                <input type="text" id="user-username" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="user-password">Password</label>
-                <input type="password" id="user-password" class="form-input" required>
-            </div>
-            <div class="form-group">
-                <label for="user-role">Role</label>
-                <select id="user-role" class="form-input">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-            </div>
-            <div class="flex gap-2" style="justify-content: flex-end;">
-                <button type="button" class="btn btn-outline" onclick="closeModal('user-modal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Create</button>
-            </div>
-        </form>
+<!-- User Modal -->
+<div class="modal" :class="activeModal === 'user' ? 'is-active' : ''" x-cloak>
+    <div class="modal-background" @click="closeModal()"></div>
+    <div class="modal-content">
+        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+            <h3 class="title is-4 has-text-white mb-8">Provision Authorized Entity</h3>
+            <form @submit.prevent="createUser()">
+                <div class="field mb-6">
+                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Entity Identifier (Username)</label>
+                    <div class="control">
+                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="userForm.username" required>
+                    </div>
+                </div>
+                <div class="field mb-6">
+                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Access Cipher (Password)</label>
+                    <div class="control">
+                        <input class="input bg-slate-700 border-slate-600 text-white h-12" type="password" x-model="userForm.password" required>
+                    </div>
+                </div>
+                <div class="field mb-8">
+                    <label class="label has-text-grey-light uppercase text-xs tracking-widest">Protocol Clearance (Role)</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select class="bg-slate-700 border-slate-600 text-white" x-model="userForm.role">
+                                <option value="user">Standard Agent</option>
+                                <option value="admin">Cluster Administrator</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3">
+                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
+                    <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20">Provision</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<!-- Assign Users Modal -->
-<div id="assign-modal" class="modal-overlay hidden">
-    <div class="modal">
-        <h3>Assign Users to Topic</h3>
-        <div id="assign-users-list" class="mb-3"></div>
-        <div class="flex gap-2" style="justify-content: flex-end;">
-            <button type="button" class="btn btn-outline" onclick="closeModal('assign-modal')">Cancel</button>
-            <button type="button" class="btn btn-primary" onclick="saveAssignments()">Save</button>
+<!-- Assign Modal -->
+<div class="modal" :class="activeModal === 'assign' ? 'is-active' : ''" x-cloak>
+    <div class="modal-background" @click="closeModal()"></div>
+    <div class="modal-content">
+        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+            <h3 class="title is-4 has-text-white mb-8">Configure Access Protocols</h3>
+            <div class="space-y-4 max-h-96 overflow-y-auto mb-8 pr-4 custom-scrollbar">
+                <template x-for="user in users" :key="user.id">
+                    <label class="flex items-center justify-between p-4 bg-slate-750 rounded-xl cursor-pointer border border-transparent hover:border-slate-500 transition-all">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs" x-text="user.username[0].toUpperCase()"></div>
+                            <div>
+                                <div class="font-bold text-sm" x-text="user.username"></div>
+                                <div class="text-[10px] uppercase text-slate-500 tracking-widest font-bold" x-text="user.role"></div>
+                            </div>
+                        </div>
+                        <input type="checkbox" class="w-5 h-5 accent-blue-500" :value="user.id" x-model="assignedUserIds">
+                    </label>
+                </template>
+            </div>
+            <div class="flex justify-end gap-3">
+                <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
+                <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="saveAssignments()">Apply Protocols</button>
+            </div>
         </div>
     </div>
 </div>
 
 <!-- Upload Modal -->
-<div id="upload-modal" class="modal-overlay hidden">
-    <div class="modal">
-        <h3>Upload Documents</h3>
-        <form id="upload-form">
-            <div class="form-group">
-                <label for="upload-files">Select Files (PDF, DOCX, TXT, PPTX, XLSX, MD)</label>
-                <input type="file" id="upload-files" class="form-input" multiple accept=".pdf,.docx,.txt,.pptx,.xlsx,.md,.markdown">
+<div class="modal" :class="activeModal === 'upload' ? 'is-active' : ''" x-cloak>
+    <div class="modal-background" @click="closeModal()"></div>
+    <div class="modal-content">
+        <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
+            <h3 class="title is-4 has-text-white mb-8">Ingest Intelligence Feed</h3>
+            <div class="bg-slate-700/50 border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center mb-8 hover:border-blue-500 transition-all group">
+                <input type="file" id="upload-files" multiple class="hidden" @change="handleFileSelect">
+                <label for="upload-files" class="cursor-pointer">
+                    <div class="w-16 h-16 bg-slate-700 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:bg-blue-600 transition-colors shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                    </div>
+                    <p class="font-bold text-lg mb-1">Upload Data Packets</p>
+                    <p class="text-xs text-slate-400 uppercase tracking-widest">PDF, DOCX, TXT, PPTX, XLSX, MD</p>
+                </label>
             </div>
-            <div class="flex gap-2" style="justify-content: flex-end;">
-                <button type="button" class="btn btn-outline" onclick="closeModal('upload-modal')">Cancel</button>
-                <button type="submit" class="btn btn-primary">Upload</button>
+
+            <div x-show="uploadFiles.length > 0" class="mb-8 space-y-3">
+                <template x-for="(file, index) in uploadFiles" :key="index">
+                    <div class="flex items-center justify-between p-3 bg-slate-750 rounded-lg text-sm">
+                        <span class="truncate pr-4" x-text="file.name"></span>
+                        <span class="text-slate-500 text-xs flex-shrink-0" x-text="`${(file.size / 1024).toFixed(1)} KB`"></span>
+                    </div>
+                </template>
             </div>
-        </form>
-        <div id="upload-progress" class="mt-3"></div>
+
+            <div x-show="isUploading" class="mb-8">
+                <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-2">
+                    <span class="text-blue-400">Ingesting Intelligence...</span>
+                    <span x-text="`${uploadProgress}%`"></p>
+                </div>
+                <progress class="progress is-link is-small" :value="uploadProgress" max="100"></progress>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()" :disabled="isUploading">Abort</button>
+                <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="uploadDocuments()" :disabled="isUploading || uploadFiles.length === 0">Sync Node</button>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
+
 {% block extra_scripts %}
-<script src="/static/js/admin.js"></script>
+<script>
+function adminApp() {
+    return {
+        section: 'overview',
+        topics: [],
+        users: [],
+        activeModal: null,
+        currentTopicId: null,
+        
+        topicForm: { name: '', description: '' },
+        userForm: { username: '', password: '', role: 'user' },
+        assignedUserIds: [],
+        
+        uploadFiles: [],
+        isUploading: false,
+        uploadProgress: 0,
+        
+        chart: null,
+
+        async init() {
+            requireAuth();
+            if (!isAdmin()) {
+                window.location.href = "/chat";
+            }
+            await this.loadTopics();
+            await this.loadUsers();
+            this.renderChart();
+        },
+
+        async loadTopics() {
+            const resp = await apiCall("/api/topics");
+            this.topics = await resp.json();
+            if (this.chart) this.updateChart();
+        },
+
+        async loadUsers() {
+            const resp = await apiCall("/api/users");
+            this.users = await resp.json();
+        },
+
+        openModal(type) {
+            this.activeModal = type;
+        },
+
+        closeModal() {
+            this.activeModal = null;
+            this.currentTopicId = null;
+            this.uploadFiles = [];
+        },
+
+        async createTopic() {
+            const name = this.topicForm.name;
+            const description = this.topicForm.description;
+            const resp = await apiCall(`/api/topics?name=${encodeURIComponent(name)}&description=${encodeURIComponent(description)}`, { method: 'POST' });
+            if (resp.ok) {
+                this.topicForm = { name: '', description: '' };
+                this.closeModal();
+                await this.loadTopics();
+            }
+        },
+
+        async deleteTopic(id) {
+            if (!confirm('Critical: Permanently purge this intelligence cluster and all indexed documents?')) return;
+            const resp = await apiCall(`/api/topics/${id}`, { method: 'DELETE' });
+            if (resp.ok) await this.loadTopics();
+        },
+
+        async createUser() {
+            const resp = await apiCall("/api/users", {
+                method: 'POST',
+                body: JSON.stringify(this.userForm),
+            });
+            if (resp.ok) {
+                this.userForm = { username: '', password: '', role: 'user' };
+                this.closeModal();
+                await this.loadUsers();
+            }
+        },
+
+        async showAssign(topicId) {
+            this.currentTopicId = topicId;
+            // Get currently assigned users for this topic - simplified: would need API support for better handling
+            this.assignedUserIds = []; 
+            this.openModal('assign');
+        },
+
+        async saveAssignments() {
+            await apiCall(`/api/topics/${this.currentTopicId}/assign`, {
+                method: 'POST',
+                body: JSON.stringify({ user_ids: this.assignedUserIds }),
+            });
+            this.closeModal();
+            await this.loadTopics();
+        },
+
+        handleFileSelect(e) {
+            this.uploadFiles = Array.from(e.target.files);
+        },
+
+        showUpload(topicId) {
+            this.currentTopicId = topicId;
+            this.uploadFiles = [];
+            this.uploadProgress = 0;
+            this.openModal('upload');
+        },
+
+        async uploadDocuments() {
+            this.isUploading = true;
+            this.uploadProgress = 0;
+            
+            for (let i = 0; i < this.uploadFiles.length; i++) {
+                const file = this.uploadFiles[i];
+                const formData = new FormData();
+                formData.append('file', file);
+                
+                await fetch(`/api/topics/${this.currentTopicId}/documents`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${getToken()}` },
+                    body: formData,
+                });
+                
+                this.uploadProgress = Math.round(((i + 1) / this.uploadFiles.length) * 100);
+            }
+            
+            this.isUploading = false;
+            this.closeModal();
+            await this.loadTopics();
+        },
+
+        renderChart() {
+            const ctx = document.getElementById('topicsChart').getContext('2d');
+            this.chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: this.topics.map(t => t.name),
+                    datasets: [{
+                        label: 'Indexed Documents',
+                        data: this.topics.map(t => t.document_count),
+                        backgroundColor: '#3e8ed0',
+                        borderRadius: 8,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#94a3b8' }
+                        }
+                    }
+                }
+            });
+        },
+
+        updateChart() {
+            this.chart.data.labels = this.topics.map(t => t.name);
+            this.chart.data.datasets[0].data = this.topics.map(t => t.document_count);
+            this.chart.update();
+        }
+    }
+}
+</script>
+<style>
+.custom-scrollbar::-webkit-scrollbar { width: 4px; }
+.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+.bg-slate-750 { background-color: #262a33; }
+</style>
 {% endblock %}

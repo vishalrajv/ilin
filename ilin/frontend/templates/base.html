@@ -1,15 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="has-background-dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ILIN{% endblock %}</title>
+    
+    <!-- CSS Frameworks -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.0/css/bulma.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="/static/css/style.css">
+    
+    <!-- Alpine.js & Chart.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="/static/js/auth.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#1a1c23',
+                            accent: '#3e8ed0',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        [x-cloak] { display: none !important; }
+        .is-dark-mode { background-color: #1a1c23; color: #f5f5f5; }
+    </style>
+    
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="is-dark-mode min-h-screen">
     {% block content %}{% endblock %}
-    <script src="/static/js/auth.js"></script>
     {% block extra_scripts %}{% endblock %}
 </body>
 </html>

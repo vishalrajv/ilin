@@ -2,10 +2,10 @@
 
 # Developer: Vishal Raj V, Senior Engineer
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
 from ilin.storage.database import init_db
@@ -31,23 +31,26 @@ app.include_router(chat_router)
 frontend_dir = Path(__file__).parent.parent / "frontend"
 app.mount("/static", StaticFiles(directory=str(frontend_dir / "static")), name="static")
 
+templates = Jinja2Templates(directory=str(frontend_dir / "templates"))
+templates.env.cache = None  # FIX: Disable broken Jinja2 cache in Starlette 0.38.6+
+
 
 @app.get("/")
-async def serve_frontend():
+async def serve_frontend(request: Request):
     """Serve the main HTML page."""
-    return FileResponse(str(frontend_dir / "templates" / "login.html"))
+    return templates.TemplateResponse(request, "login.html")
 
 
 @app.get("/admin")
-async def serve_admin():
+async def serve_admin(request: Request):
     """Serve admin dashboard."""
-    return FileResponse(str(frontend_dir / "templates" / "admin.html"))
+    return templates.TemplateResponse(request, "admin.html")
 
 
 @app.get("/chat")
-async def serve_chat():
+async def serve_chat(request: Request):
     """Serve user chat interface."""
-    return FileResponse(str(frontend_dir / "templates" / "chat.html"))
+    return templates.TemplateResponse(request, "chat.html")
 
 
 @app.on_event("startup")

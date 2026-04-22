@@ -11,7 +11,7 @@ from sqlalchemy import (
     Text,
     JSON,
 )
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from ilin.storage.database import Base
 
@@ -21,11 +21,13 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String(50), unique=True, nullable=False, index=True)
-    password_hash = Column(String(255), nullable=False)
-    role = Column(String(20), nullable=False, default="user")
-    created_at = Column(DateTime, default=datetime.utcnow)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    username: Mapped[str] = mapped_column(
+        String(50), unique=True, nullable=False, index=True
+    )
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    role: Mapped[str] = mapped_column(String(20), nullable=False, default="user")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     topic_assignments = relationship(
         "TopicAssignment", back_populates="user", cascade="all, delete-orphan"

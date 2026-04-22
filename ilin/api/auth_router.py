@@ -17,13 +17,24 @@ router = APIRouter(prefix="/api/auth", tags=["auth"])
 def login(request: LoginRequest, db: Session = Depends(get_db)):
     """Authenticate user and return JWT token."""
     user = db.query(User).filter(User.username == request.username).first()
-    if user is None or not verify_password(request.password, user.password_hash):
+
+    # FIXED: Separate checks - critical for SQLAlchemy objects
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
 
-    token = create_jwt(user_id=user.id, username=user.username, role=user.role)
-    return TokenResponse(access_token=token, username=user.username, role=user.role)
+    if not verify_password(request.password, str(user.password_hash)):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+        )
+
+    token = create_jwt(
+        user_id=int(user.id), username=str(user.username), role=str(user.role)
+    )
+    return TokenResponse(
+        access_token=token, username=str(user.username), role=str(user.role)
+    )
 
 
 @router.post("/logout")
@@ -36,8 +47,10 @@ def logout(current_user: User = Depends(get_current_user)):
 def get_me(current_user: User = Depends(get_current_user)):
     """Return current authenticated user info."""
     return UserResponse(
-        id=current_user.id,
-        username=current_user.username,
-        role=current_user.role,
-        created_at=str(current_user.created_at) if current_user.created_at else None,
+        id=int(current_user.id),
+        username=str(current_user.username),
+        role=str(current_user.role),
+        created_at=str(current_user.created_at)
+        if current_user.created_at is not None
+        else None,
     )

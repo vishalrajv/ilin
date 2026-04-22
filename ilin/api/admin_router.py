@@ -55,7 +55,7 @@ def create_user(
     """Create a new user (admin only)."""
     existing = db.query(User).filter(User.username == request.username).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Username already exists")
+        raise HTTPException(status_code=409, detail="Username already exists")
 
     user = User(
         username=request.username,

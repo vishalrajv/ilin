@@ -1,49 +1,370 @@
 {% extends "base.html" %}
 {% block title %}ILIN - Chat{% endblock %}
 {% block content %}
-<div class="app-layout">
-    <aside class="sidebar">
-        <div class="sidebar-header">
-            <h2>ILIN</h2>
+<div class="flex h-screen bg-slate-900 text-slate-100 overflow-hidden" x-data="chatApp()" x-init="init()">
+    <!-- Sidebar -->
+    <aside class="w-72 bg-slate-800 flex flex-col border-r border-slate-700 shadow-xl transition-all">
+        <div class="p-6 border-b border-slate-700 flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center font-bold text-white shadow-lg shadow-blue-500/20">I</div>
+            <h2 class="text-xl font-bold tracking-tight">ILIN</h2>
         </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="active" data-section="topics">Topics</a>
-            <a href="#" data-section="history">Chat History</a>
-            <a href="#" onclick="logout(); return false;">Logout</a>
+        
+        <nav class="flex-1 overflow-y-auto p-4 space-y-2">
+            <button 
+                @click="section = 'topics'" 
+                class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
+                :class="section === 'topics' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+                <span>Knowledge Bases</span>
+            </button>
+            <button 
+                @click="section = 'history'; loadHistory()" 
+                class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
+                :class="section === 'history' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Recent Inquiries</span>
+            </button>
         </nav>
-    </aside>
-    <main class="main-content" style="padding: 0;">
-        <!-- Topics List -->
-        <section id="chat-topics-section" style="padding: 24px;">
-            <h2 class="mb-3">Select a Topic</h2>
-            <div id="chat-topics-grid" class="topics-grid"></div>
-        </section>
 
-        <!-- Chat Area -->
-        <section id="chat-area-section" class="hidden">
-            <div class="chat-layout">
-                <div class="chat-main">
-                    <div id="chat-header" class="flex-between" style="padding: 16px 20px; border-bottom: 1px solid #e1e5eb; background: var(--bg-card);">
-                        <h3 id="chat-topic-name"></h3>
-                        <button class="btn btn-outline" onclick="backToTopics()" style="padding: 6px 12px; font-size: 12px;">Back to Topics</button>
+        <div class="p-4 border-t border-slate-700">
+            <button onclick="logout()" class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 flex items-center gap-3 transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                <span>Disconnect</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col relative bg-slate-900">
+        <!-- Topics View -->
+        <template x-if="section === 'topics' && !currentTopic">
+            <div class="flex-1 overflow-y-auto p-12">
+                <div class="max-w-5xl mx-auto">
+                    <div class="mb-12">
+                        <h1 class="text-4xl font-bold mb-3 tracking-tight">Intelligence Hub</h1>
+                        <p class="text-slate-400 text-lg">Select a knowledge base to initiate a local intelligence query.</p>
                     </div>
-                    <div id="chat-messages" class="chat-messages"></div>
-                    <div class="chat-input-area">
-                        <textarea id="chat-input" placeholder="Type your question..." rows="1"></textarea>
-                        <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <template x-for="topic in topics" :key="topic.id">
+                            <div 
+                                @click="openTopic(topic)" 
+                                class="bg-slate-800 border border-slate-700 p-6 rounded-2xl cursor-pointer hover:border-blue-500 hover:bg-slate-750 transition-all group shadow-sm hover:shadow-blue-500/10"
+                            >
+                                <div class="w-12 h-12 bg-slate-700 rounded-xl mb-4 flex items-center justify-center group-hover:bg-blue-600 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                                    </svg>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2" x-text="topic.name"></h3>
+                                <p class="text-slate-400 text-sm mb-4 line-clamp-2" x-text="topic.description || 'Access intelligence indexed across multiple documents.'"></p>
+                                <div class="flex items-center gap-2 text-xs font-medium text-slate-500 uppercase tracking-widest">
+                                    <span class="bg-slate-700 px-2 py-1 rounded" x-text="`${topic.document_count} Docs`"></span>
+                                    <span class="w-1 h-1 bg-slate-600 rounded-full"></span>
+                                    <span>Indexed Node</span>
+                                </div>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
-        </section>
+        </template>
 
-        <!-- History Section -->
-        <section id="history-section" class="hidden" style="padding: 24px;">
-            <h2 class="mb-3">Chat History</h2>
-            <div id="history-list"></div>
-        </section>
+        <!-- Chat View -->
+        <template x-if="currentTopic">
+            <div class="flex-1 flex flex-col h-full bg-slate-900">
+                <!-- Chat Header -->
+                <header class="h-20 bg-slate-800/50 backdrop-blur-md border-b border-slate-700 flex items-center justify-between px-8 sticky top-0 z-10">
+                    <div class="flex items-center gap-4">
+                        <button @click="backToTopics()" class="p-2 hover:bg-slate-700 rounded-lg text-slate-400 transition-all">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                            </svg>
+                        </button>
+                        <div>
+                            <h2 class="text-lg font-bold" x-text="currentTopic.name"></h2>
+                            <p class="text-xs text-blue-400 font-medium uppercase tracking-widest flex items-center gap-1.5">
+                                <span class="flex h-1.5 w-1.5 relative">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-blue-500"></span>
+                                </span>
+                                Active Node Session
+                            </p>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Messages -->
+                <div class="flex-1 overflow-y-auto p-8 space-y-8" id="messages-container">
+                    <div class="max-w-4xl mx-auto space-y-8">
+                        <template x-for="(msg, index) in messages" :key="index">
+                            <div class="flex items-start gap-5" :class="msg.role === 'user' ? 'flex-row-reverse' : ''">
+                                <div class="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center font-bold text-lg shadow-sm"
+                                     :class="msg.role === 'user' ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-400 border border-slate-700'">
+                                    <span x-text="msg.role === 'user' ? 'U' : 'AI'"></span>
+                                </div>
+                                <div class="flex-1 space-y-3" :class="msg.role === 'user' ? 'text-right' : ''">
+                                    <div class="inline-block p-5 rounded-2xl shadow-sm text-left leading-relaxed"
+                                         :class="msg.role === 'user' ? 'bg-blue-700/20 text-blue-100 border border-blue-700/30' : 'bg-slate-800 text-slate-200 border border-slate-700'">
+                                        <div class="prose prose-invert max-w-none whitespace-pre-wrap" x-text="msg.content"></div>
+                                        
+                                        <!-- Sources -->
+                                        <template x-if="msg.sources && msg.sources.length > 0">
+                                            <div class="mt-4 pt-4 border-t border-slate-700/50">
+                                                <details class="group">
+                                                    <summary class="text-xs font-bold text-slate-500 uppercase tracking-widest cursor-pointer list-none flex items-center gap-2 hover:text-slate-400 transition-colors">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                        Reference Intelligence (<span x-text="msg.sources.length"></span>)
+                                                    </summary>
+                                                    <div class="mt-3 grid gap-3">
+                                                        <template x-for="source in msg.sources">
+                                                            <div class="bg-slate-900/50 p-3 rounded-lg border border-slate-700/30 text-xs">
+                                                                <div class="font-bold text-blue-400 mb-1" x-text="`${source.source_file}${source.page_number ? ` (p.${source.page_number})` : ''}`"></div>
+                                                                <div class="text-slate-400 italic" x-text="source.text"></div>
+                                                            </div>
+                                                        </template>
+                                                    </div>
+                                                </details>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                        
+                        <!-- Typing Indicator -->
+                        <template x-if="isStreaming">
+                            <div class="flex items-start gap-5">
+                                <div class="w-10 h-10 rounded-xl bg-slate-800 text-slate-400 border border-slate-700 flex items-center justify-center font-bold text-lg animate-pulse">
+                                    AI
+                                </div>
+                                <div class="flex-1">
+                                    <div class="inline-block p-5 rounded-2xl bg-slate-800 border border-slate-700">
+                                        <div class="flex gap-1">
+                                            <span class="w-1.5 h-1.5 bg-slate-600 rounded-full animate-bounce"></span>
+                                            <span class="w-1.5 h-1.5 bg-slate-600 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                            <span class="w-1.5 h-1.5 bg-slate-600 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-8 bg-gradient-to-t from-slate-900 via-slate-900 to-transparent">
+                    <div class="max-w-4xl mx-auto relative group">
+                        <textarea 
+                            x-model="userInput" 
+                            @keydown.enter.prevent="sendMessage()" 
+                            placeholder="Inquire with the Node..." 
+                            rows="1" 
+                            class="w-full bg-slate-800 border border-slate-700 text-white rounded-2xl p-5 pr-24 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all shadow-xl resize-none outline-none"
+                            :disabled="isStreaming"
+                        ></textarea>
+                        <button 
+                            @click="sendMessage()" 
+                            class="absolute right-3 top-3 bottom-3 px-6 bg-blue-600 hover:bg-blue-500 text-white rounded-xl font-bold transition-all flex items-center gap-2 shadow-lg shadow-blue-600/20"
+                            :disabled="!userInput.trim() || isStreaming"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                            <span>Query</span>
+                        </button>
+                    </div>
+                    <p class="text-center text-[10px] text-slate-600 uppercase tracking-widest mt-4">Local Inference Engine • ILIN Integrated Intelligence</p>
+                </div>
+            </div>
+        </template>
+
+        <!-- History View -->
+        <template x-if="section === 'history'">
+            <div class="flex-1 overflow-y-auto p-12">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl font-bold mb-8 tracking-tight">Intelligence Logs</h1>
+                    <div class="space-y-4">
+                        <template x-for="session in history" :key="session.id">
+                            <div @click="loadSession(session.id)" class="bg-slate-800 border border-slate-700 p-6 rounded-2xl flex items-center justify-between group cursor-pointer hover:border-blue-500 transition-all shadow-sm">
+                                <div class="flex items-center gap-5">
+                                    <div class="w-12 h-12 bg-slate-700 rounded-xl flex items-center justify-center group-hover:bg-blue-600/20 transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400 group-hover:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg" x-text="session.topic_name"></h3>
+                                        <p class="text-sm text-slate-500" x-text="`${session.message_count} messages • ${new Date(session.updated_at).toLocaleString()}`"></p>
+                                    </div>
+                                </div>
+                                <button @click.stop="exportSession(session.id)" class="p-3 bg-slate-700 hover:bg-slate-600 rounded-xl text-slate-300 transition-all opacity-0 group-hover:opacity-100 shadow-sm">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </template>
+                        <template x-if="history.length === 0">
+                            <div class="text-center py-24 bg-slate-800/30 rounded-3xl border-2 border-dashed border-slate-700">
+                                <p class="text-slate-500 font-medium">No previous intelligence logs found.</p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </template>
     </main>
 </div>
 {% endblock %}
+
 {% block extra_scripts %}
-<script src="/static/js/chat.js"></script>
+<script>
+function chatApp() {
+    return {
+        section: 'topics',
+        topics: [],
+        currentTopic: null,
+        currentSessionId: null,
+        messages: [],
+        userInput: '',
+        isStreaming: false,
+        history: [],
+
+        async init() {
+            requireAuth();
+            await this.loadTopics();
+        },
+
+        async loadTopics() {
+            const resp = await apiCall("/api/topics");
+            this.topics = await resp.json();
+        },
+
+        openTopic(topic) {
+            this.currentTopic = topic;
+            this.currentSessionId = null;
+            this.messages = [];
+            this.section = 'topics';
+            this.$nextTick(() => this.scrollToBottom());
+        },
+
+        backToTopics() {
+            this.currentTopic = null;
+            this.currentSessionId = null;
+            this.messages = [];
+        },
+
+        async sendMessage() {
+            const message = this.userInput.trim();
+            if (!message || this.isStreaming) return;
+
+            this.userInput = '';
+            this.messages.push({ role: 'user', content: message });
+            this.$nextTick(() => this.scrollToBottom());
+
+            this.isStreaming = true;
+            const assistantMsg = { role: 'assistant', content: '', sources: [] };
+            this.messages.push(assistantMsg);
+
+            const url = `/api/chat?topic_id=${this.currentTopic.id}&message=${encodeURIComponent(message)}${this.currentSessionId ? `&session_id=${this.currentSessionId}` : ''}`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${getToken()}` },
+                });
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6);
+                            if (data === '[DONE]') continue;
+                            try {
+                                const parsed = JSON.parse(data);
+                                if (parsed.content) {
+                                    assistantMsg.content += parsed.content;
+                                    this.scrollToBottom();
+                                }
+                                if (parsed.done && parsed.sources) {
+                                    assistantMsg.sources = parsed.sources;
+                                }
+                                if (parsed.error) {
+                                    assistantMsg.content += `\n[Error: ${parsed.error}]`;
+                                }
+                            } catch (e) {}
+                        }
+                    }
+                }
+            } catch (err) {
+                assistantMsg.content = `Critical Connection Error: ${err.message}`;
+            } finally {
+                this.isStreaming = false;
+                this.scrollToBottom();
+            }
+        },
+
+        async loadHistory() {
+            const resp = await apiCall("/api/chat/history");
+            this.history = await resp.json();
+        },
+
+        async loadSession(sessionId) {
+            const resp = await apiCall(`/api/chat/history/${sessionId}`);
+            const messages = await resp.json();
+            
+            // Find topic for this session
+            const firstMsg = messages[0];
+            // We'll need to fetch topic name or have it in history
+            const sessionInfo = this.history.find(s => s.id === sessionId);
+            
+            this.currentTopic = { id: sessionInfo.topic_id, name: sessionInfo.topic_name };
+            this.currentSessionId = sessionId;
+            this.messages = messages;
+            this.section = 'topics';
+            this.$nextTick(() => this.scrollToBottom());
+        },
+
+        async exportSession(sessionId) {
+            const resp = await apiCall(`/api/chat/history/${sessionId}/export?format=txt`);
+            const data = await resp.json();
+            const blob = new Blob([data.content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ilin-intel-log-${sessionId}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        },
+
+        scrollToBottom() {
+            const container = document.getElementById('messages-container');
+            if (container) {
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+    }
+}
+</script>
 {% endblock %}
