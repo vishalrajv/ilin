@@ -5,7 +5,7 @@
     - [ ] Write failing test for \DELETE /api/users/{user_id}\ in \	ests/test_users_admin.py\
     - [ ] Implement \delete_user\ in \ilin/api/admin_router.py\ (ensure TopicAssignment cleanup and self-delete protection)
     - [ ] Verify tests pass and coverage >50%
-- [ ] Task: Implement Edit User Endpoint
+- [x] Task: Implement Edit User Endpoint 3442cc9
     - [ ] Write failing test for \PATCH /api/users/{user_id}\ in \	ests/test_users_admin.py\
     - [ ] Implement \update_user\ in \ilin/api/admin_router.py\ (allow password reset)
     - [ ] Verify tests pass and coverage >50%
