@@ -2,7 +2,7 @@
 
 """Pydantic models for authentication request/response schemas."""
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 
 class LoginRequest(BaseModel):
@@ -24,9 +24,27 @@ class TokenResponse(BaseModel):
 class UserCreate(BaseModel):
     """Admin user creation request."""
 
-    username: str
-    password: str
+    username: str = Field(..., min_length=3, max_length=50)
+    password: str = Field(..., min_length=8)
     role: str = "user"
+
+    @field_validator('username')
+    @classmethod
+    def validate_username(cls, v):
+        """Validate username is alphanumeric with underscores only and lowercase."""
+        if not v.islower():
+            raise ValueError('Username must be lowercase')
+        if not all(c.isalnum() or c == '_' for c in v):
+            raise ValueError('Username must contain only alphanumeric characters and underscores')
+        return v
+
+    @field_validator('role')
+    @classmethod
+    def validate_role(cls, v):
+        """Validate role is either 'user' or 'admin'."""
+        if v not in {'user', 'admin'}:
+            raise ValueError('Role must be either "user" or "admin"')
+        return v
 
 
 class UserResponse(BaseModel):
