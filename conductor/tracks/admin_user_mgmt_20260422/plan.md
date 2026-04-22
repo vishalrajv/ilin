@@ -12,10 +12,10 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1: Backend API Enhancements' (Protocol in workflow.md) c8ed0b4
 
 ## Phase 2: Frontend Integration
-- [ ] Task: Wire Delete Functionality
+- [x] Task: Wire Delete Functionality 9e31f82
     - [ ] Implement \deleteUser\ javascript handler in \dminApp()\ in \dmin.html\ (or separate JS file)
     - [ ] Add delete button and confirmation dialog to users table in \dmin.html\
-- [ ] Task: Wire Edit Functionality
+- [x] Task: Wire Edit Functionality 5e4d599
     - [ ] Implement \editUser\ javascript handler to populate modal
     - [ ] Update user modal to support both Create and Edit modes
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Frontend Integration' (Protocol in workflow.md)
