@@ -96,7 +96,7 @@ def test_create_user(client, admin_user):
     token = _get_token(client, "admin", "admin123")
     response = client.post(
         "/api/users",
-        json={"username": "newuser", "password": "pass123", "role": "user"},
+        json={"username": "newuser", "password": "pass1234", "role": "user"},
         headers={"Authorization": f"Bearer {token}"},
     )
     assert response.status_code == 201

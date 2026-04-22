@@ -9,14 +9,18 @@ from ilin.storage.database import get_db
 from ilin.storage.models import User
 
 
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 
 
 def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    credentials: HTTPAuthorizationCredentials | None = Depends(security),
     db: Session = Depends(get_db),
 ) -> User:
     """Extract and validate JWT from Authorization header. Returns User model."""
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
+        )
     token = credentials.credentials
     payload = decode_jwt(token)
     if payload is None:
