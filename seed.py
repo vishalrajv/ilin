@@ -35,6 +35,25 @@ def seed():
         print("Admin user already exists")
     db.close()
 
+    # RAG Document Ingestion Loop
+    from ilin.core.rag_engine import RAGEngine
+    source_docs = settings.data_dir / "source_docs"
+    if source_docs.exists():
+        print("Starting RAG document ingestion...")
+        engine = RAGEngine()
+        topic_id = 1
+        for file_path in source_docs.rglob("*"):
+            if file_path.is_file():
+                try:
+                    metadatas, embeddings = engine.index_document(file_path)
+                    if embeddings is not None and len(embeddings) > 0:
+                        engine.add_to_topic_index(topic_id, metadatas, embeddings)
+                        print(f"Successfully indexed {file_path.name}")
+                except Exception as e:
+                    print(f"Error indexing {file_path.name}: {e}")
+    else:
+        print("No source_docs directory found. Skipping ingestion.")
+
 
 if __name__ == "__main__":
     seed()

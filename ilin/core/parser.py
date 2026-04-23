@@ -69,7 +69,15 @@ class TXTParser:
     """Parse plain text files."""
 
     def parse(self, file_path: Path) -> list[TextChunk]:
-        text = file_path.read_text(encoding="utf-8")
+        try:
+            text = file_path.read_text(encoding="utf-8", errors="replace")
+            text = "".join(c for c in text if c.isprintable() or c in "\n\r\t")
+        except Exception:
+            text = ""
+            
+        if not text.strip():
+            return []
+            
         return [
             TextChunk(
                 text=text,
@@ -132,7 +140,15 @@ class MarkdownParser:
     """Parse Markdown files."""
 
     def parse(self, file_path: Path) -> list[TextChunk]:
-        text = file_path.read_text(encoding="utf-8")
+        try:
+            text = file_path.read_text(encoding="utf-8", errors="replace")
+            text = "".join(c for c in text if c.isprintable() or c in "\n\r\t")
+        except Exception:
+            text = ""
+            
+        if not text.strip():
+            return []
+            
         return [
             TextChunk(
                 text=text,

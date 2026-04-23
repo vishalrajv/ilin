@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     # Retrieval
     retrieval_top_k: int = 5
     retrieval_use_mmr: bool = False
+    retrieval_use_reranker: bool = False
+    reranker_model_path: str = "data/models/bge-reranker-base"
 
     # Chunking
     chunk_size: int = 500

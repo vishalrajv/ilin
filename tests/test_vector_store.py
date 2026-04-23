@@ -26,12 +26,27 @@ def test_add_and_search(vector_store):
     ]
     vector_store.add(embeddings, metadatas)
     assert vector_store.index.ntotal == 3
+    assert len(vector_store.bm25_corpus) == 3
 
     query = embeddings[0]
     results = vector_store.search(query, top_k=1)
     assert len(results) == 1
     assert results[0]["metadata"]["text"] == "chunk 1"
 
+def test_search_bm25(vector_store):
+    """Test sparse BM25 retrieval for exact terms."""
+    embeddings = np.random.rand(3, 384).astype(np.float32)
+    metadatas = [
+        {"text": "This contains the magic word BANANA", "source": "doc1.pdf"},
+        {"text": "This contains an apple", "source": "doc1.pdf"},
+        {"text": "This contains a pear", "source": "doc1.pdf"},
+    ]
+    vector_store.add(embeddings, metadatas)
+
+    # test bm25 logic
+    results = vector_store.search_bm25("BANANA", top_k=1)
+    assert len(results) == 1
+    assert "BANANA" in results[0]["metadata"]["text"]
 
 def test_search_empty_index(vector_store):
     """Search on empty index returns empty list."""

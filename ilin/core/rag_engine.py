@@ -65,7 +65,7 @@ class RAGEngine:
         return self.retriever.retrieve(topic_id, query)
 
     def build_prompt(self, query: str, context: list[dict], chat_history: str = "") -> str:
-        """Build the full prompt with system, context, history, and question."""
+        """Build the full prompt using Gemma Instruct formatting."""
         context_text = ""
         for i, item in enumerate(context, 1):
             source = item["metadata"].get("source_file", "unknown")
@@ -75,14 +75,16 @@ class RAGEngine:
 
         history_section = f"\nChat History:\n{chat_history}\n" if chat_history else ""
 
-        return (
-            f"System: You are a helpful assistant. Answer the user's question based ONLY on the provided context.\n"
+        instruction = (
+            f"You are a helpful assistant. Answer the user's question based ONLY on the provided context.\n"
             f"If the answer cannot be found in the context, say \"I don't have enough information to answer that.\"\n\n"
             f"Context:\n{context_text}\n"
             f"{history_section}"
-            f"Question: {query}\n"
-            f"Answer:"
+            f"Question: {query}"
         )
+
+        # CHANGED: Wrapped with Gemma's <start_of_turn> tags for proper instruction-following
+        return f"<start_of_turn>user\n{instruction}<end_of_turn>\n<start_of_turn>model\n"
 
     async def generate_response(self, prompt: str) -> AsyncGenerator[str, None]:
         """Generate streaming response from prompt."""

@@ -24,11 +24,14 @@ def chunk_text(
 
 
 def _split_text(text: str, chunk_size: int, overlap: int) -> list[str]:
-    """Recursively split text by decreasing separator priority."""
+    """Recursively split text by decreasing separator priority (Markdown aware)."""
     if len(text) <= chunk_size:
         return [text]
 
-    for separator in ["\n\n", "\n", ". ", " ", ""]:
+    # CHANGED: Added Markdown headers to retain semantic structure
+    separators = ["\n# ", "\n## ", "\n### ", "\n#### ", "\n\n", "\n", ". ", " ", ""]
+    
+    for separator in separators:
         if separator == "":
             return _hard_split(text, chunk_size, overlap)
 
