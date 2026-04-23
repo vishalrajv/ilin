@@ -2,51 +2,53 @@
 {% block title %}ILIN - Admin Terminal{% endblock %}
 {% block content %}
 <div x-data="adminApp()" x-init="init()">
-    <div class="flex h-screen bg-slate-900 text-slate-100 overflow-hidden">
+    <div class="d-flex vh-100 bg-light text-dark overflow-hidden">
         <!-- Sidebar -->
-        <aside class="w-72 bg-slate-800 flex flex-col border-r border-slate-700 shadow-xl transition-all">
-            <div class="p-6 border-b border-slate-700 flex items-center gap-3">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center font-bold text-white shadow-lg">A</div>
-                <h2 class="text-xl font-bold tracking-tight">ILIN Admin</h2>
+        <aside class="bg-white border-end d-flex flex-column shadow-sm transition-all" style="width: 280px;">
+            <div class="p-4 border-bottom d-flex align-items-center gap-3">
+                <div class="bg-primary text-white rounded d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 32px; height: 32px;">A</div>
+                <h2 class="h5 fw-bold mb-0">ILIN Admin</h2>
             </div>
             
-            <nav class="flex-1 overflow-y-auto p-4 space-y-2">
-                <button 
-                    @click="section = 'overview'" 
-                    class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
-                    :class="section === 'overview' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                    </svg>
-                    <span>Node Overview</span>
-                </button>
-                <button 
-                    @click="section = 'topics'" 
-                    class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
-                    :class="section === 'topics' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
-                    <span>Knowledge Bases</span>
-                </button>
-                <button 
-                    @click="section = 'users'; loadUsers()" 
-                    class="w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 transition-all"
-                    :class="section === 'users' ? 'bg-blue-600/20 text-blue-400 font-medium' : 'hover:bg-slate-700 text-slate-400'"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-                    </svg>
-                    <span>Authorized Users</span>
-                </button>
+            <nav class="flex-grow-1 overflow-auto p-3">
+                <div class="list-group list-group-flush border-0">
+                    <button 
+                        @click="section = 'overview'" 
+                        class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0 rounded mb-1 transition-all"
+                        :class="section === 'overview' ? 'active bg-primary text-white fw-medium' : 'text-secondary'"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        <span>Node Overview</span>
+                    </button>
+                    <button 
+                        @click="section = 'topics'" 
+                        class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0 rounded mb-1 transition-all"
+                        :class="section === 'topics' ? 'active bg-primary text-white fw-medium' : 'text-secondary'"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                        <span>Knowledge Bases</span>
+                    </button>
+                    <button 
+                        @click="section = 'users'; loadUsers()" 
+                        class="list-group-item list-group-item-action d-flex align-items-center gap-3 border-0 rounded mb-1 transition-all"
+                        :class="section === 'users' ? 'active bg-primary text-white fw-medium' : 'text-secondary'"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <span>Authorized Users</span>
+                    </button>
+                </div>
             </nav>
 
-            <div class="p-4 border-t border-slate-700">
-                <button onclick="logout()" class="w-full text-left px-4 py-3 rounded-xl text-slate-400 hover:bg-red-500/10 hover:text-red-400 flex items-center gap-3 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <div class="p-3 border-top">
+                <button onclick="logout()" class="btn btn-light w-100 text-start d-flex align-items-center gap-3 text-danger border-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                     <span>Terminate Session</span>
                 </button>
@@ -54,80 +56,96 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 flex flex-col overflow-y-auto bg-slate-900 p-12">
-            <div class="max-w-6xl mx-auto w-full">
+        <main class="flex-grow-1 d-flex flex-column overflow-auto bg-light p-4 p-md-5">
+            <div class="container-fluid" style="max-width: 72rem;">
                 
                 <!-- Overview Section -->
                 <section x-show="section === 'overview'" x-cloak>
-                    <div class="mb-12">
-                        <h1 class="text-4xl font-bold mb-3 tracking-tight">Node Overview</h1>
-                        <p class="text-slate-400 text-lg">System analytics and intelligence distribution.</p>
+                    <div class="mb-5">
+                        <h1 class="display-6 fw-bold mb-2">Node Overview</h1>
+                        <p class="text-secondary fs-5">System analytics and intelligence distribution.</p>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-                        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
-                            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Total Knowledge Bases</p>
-                            <p class="text-4xl font-bold text-blue-400" x-text="topics.length"></p>
+                    <div class="row g-4 mb-5">
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body p-4">
+                                    <p class="text-secondary small fw-bold text-uppercase tracking-widest mb-2">Total Knowledge Bases</p>
+                                    <p class="display-5 fw-bold text-primary mb-0" x-text="topics.length"></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
-                            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Total Indexed Docs</p>
-                            <p class="text-4xl font-bold text-green-400" x-text="topics.reduce((acc, t) => acc + t.document_count, 0)"></p>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body p-4">
+                                    <p class="text-secondary small fw-bold text-uppercase tracking-widest mb-2">Total Indexed Docs</p>
+                                    <p class="display-5 fw-bold text-success mb-0" x-text="topics.reduce((acc, t) => acc + t.document_count, 0)"></p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
-                            <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-2">Authorized Entities</p>
-                            <p class="text-4xl font-bold text-purple-400" x-text="users.length"></p>
+                        <div class="col-md-4">
+                            <div class="card h-100 border-0 shadow-sm rounded-4">
+                                <div class="card-body p-4">
+                                    <p class="text-secondary small fw-bold text-uppercase tracking-widest mb-2">Authorized Entities</p>
+                                    <p class="display-5 fw-bold text-info mb-0" x-text="users.length"></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-sm">
-                        <h3 class="text-xl font-bold mb-8">Intelligence Distribution</h3>
-                        <div class="h-80 w-full">
-                            <canvas id="topicsChart"></canvas>
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-body p-4">
+                            <h3 class="h5 fw-bold mb-4">Intelligence Distribution</h3>
+                            <div style="height: 320px;">
+                                <canvas id="topicsChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </section>
 
                 <!-- Topics Section -->
                 <section x-show="section === 'topics'" x-cloak>
-                    <div class="flex items-center justify-between mb-12">
+                    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-3">
                         <div>
-                            <h1 class="text-4xl font-bold mb-3 tracking-tight">Knowledge Bases</h1>
-                            <p class="text-slate-400 text-lg">Manage node intelligence clusters and indexed datasets.</p>
+                            <h1 class="display-6 fw-bold mb-2">Knowledge Bases</h1>
+                            <p class="text-secondary fs-5 mb-0">Manage node intelligence clusters and indexed datasets.</p>
                         </div>
-                        <button @click="openModal('topic')" class="button is-link font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-600/20">
+                        <button @click="openModal('topic')" class="btn btn-primary fw-bold px-4 py-2 rounded-3 shadow-sm">
                             + Initialize Cluster
                         </button>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="row g-4">
                         <template x-for="topic in topics" :key="topic.id">
-                            <div class="bg-slate-800 border border-slate-700 p-6 rounded-2xl group hover:border-slate-500 transition-all shadow-sm">
-                                <div class="flex justify-between items-start mb-4">
-                                    <div>
-                                        <h3 class="text-xl font-bold mb-1" x-text="topic.name"></h3>
-                                        <p class="text-slate-400 text-sm line-clamp-2" x-text="topic.description || 'No cluster description provided.'"></p>
-                                    </div>
-                                    <div class="flex gap-2">
-                                        <button @click="deleteTopic(topic.id)" class="p-2 text-slate-500 hover:text-red-400 transition-colors">
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                                
-                                <div class="flex items-center gap-4 text-xs font-medium text-slate-500 uppercase tracking-widest mb-6">
-                                    <span class="bg-slate-700 px-2 py-1 rounded" x-text="`${topic.document_count} Documents`"></span>
-                                    <span class="bg-slate-700 px-2 py-1 rounded" x-text="`${topic.user_count} Authorized Users`"></span>
-                                </div>
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100 border-0 shadow-sm rounded-4 card-hover transition-all">
+                                    <div class="card-body p-4 d-flex flex-column">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h3 class="h5 fw-bold mb-1" x-text="topic.name"></h3>
+                                                <p class="text-secondary small mb-0" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;" x-text="topic.description || 'No cluster description provided.'"></p>
+                                            </div>
+                                            <button @click="deleteTopic(topic.id)" class="btn btn-sm btn-light text-secondary hover-danger rounded-circle p-2 border-0">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        
+                                        <div class="d-flex align-items-center gap-2 small text-muted fw-semibold text-uppercase mt-auto mb-4" style="font-size: 0.75rem;">
+                                            <span class="badge bg-light text-secondary border px-2 py-1" x-text="`${topic.document_count} Documents`"></span>
+                                            <span class="badge bg-light text-secondary border px-2 py-1" x-text="`${topic.user_count} Authorized Users`"></span>
+                                        </div>
 
-                                <div class="flex gap-3">
-                                    <button @click="showUpload(topic.id)" class="button is-small is-dark is-outlined flex-1 font-bold rounded-lg border-slate-600">
-                                        Sync Docs
-                                    </button>
-                                    <button @click="showAssign(topic.id)" class="button is-small is-dark is-outlined flex-1 font-bold rounded-lg border-slate-600">
-                                        Access Rights
-                                    </button>
+                                        <div class="d-flex gap-2 mt-auto">
+                                            <button @click="showUpload(topic.id)" class="btn btn-outline-secondary btn-sm flex-grow-1 fw-bold rounded-3">
+                                                Sync Docs
+                                            </button>
+                                            <button @click="showAssign(topic.id)" class="btn btn-outline-secondary btn-sm flex-grow-1 fw-bold rounded-3">
+                                                Access Rights
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -136,205 +154,203 @@
 
                 <!-- Users Section -->
                 <section x-show="section === 'users'" x-cloak>
-                    <div class="flex items-center justify-between mb-12">
+                    <div class="d-flex align-items-center justify-content-between mb-5 flex-wrap gap-3">
                         <div>
-                            <h1 class="text-4xl font-bold mb-3 tracking-tight">Authorized Entities</h1>
-                            <p class="text-slate-400 text-lg">Manage access protocols for node intelligence.</p>
+                            <h1 class="display-6 fw-bold mb-2">Authorized Entities</h1>
+                            <p class="text-secondary fs-5 mb-0">Manage access protocols for node intelligence.</p>
                         </div>
-                        <button @click="openModal('user')" class="button is-link font-bold px-8 h-12 rounded-xl shadow-lg shadow-blue-600/20">
+                        <button @click="openModal('user')" class="btn btn-primary fw-bold px-4 py-2 rounded-3 shadow-sm">
                             + Add User
                         </button>
                     </div>
 
-                    <div class="bg-slate-800 border border-slate-700 rounded-2xl overflow-hidden shadow-sm">
-                        <table class="table is-fullwidth bg-transparent text-slate-100">
-                            <thead>
-                                <tr class="bg-slate-750">
-                                    <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Identifier</th>
-                                    <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Protocol Level</th>
-                                    <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Initialized At</th>
-                                    <th class="has-text-grey-light border-slate-700 py-6 px-8 uppercase text-xs tracking-widest">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <template x-for="user in users" :key="user.id">
-                                    <tr class="hover:bg-slate-750/50 transition-colors">
-                                        <td class="border-slate-700 py-6 px-8">
-                                            <div class="flex items-center gap-3">
-                                                <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs" x-text="user.username[0].toUpperCase()"></div>
-                                                <span class="font-medium" x-text="user.username"></span>
-                                            </div>
-                                        </td>
-                                        <td class="border-slate-700 py-6 px-8">
-                                            <span class="tag is-rounded font-bold px-3 uppercase text-[10px] tracking-widest"
-                                                  :class="user.role === 'admin' ? 'is-danger is-light' : 'is-info is-light'"
-                                                  x-text="user.role"></span>
-                                        </td>
-                                        <td class="border-slate-700 py-6 px-8 text-slate-400 text-sm" x-text="new Date(user.created_at).toLocaleDateString()"></td>
-                                        <td class="border-slate-700 py-6 px-8 text-right">
-                                            <div class="flex justify-end gap-2">
-                                                <button @click="openModal('user', user)" class="text-slate-500 hover:text-blue-400 transition-colors">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                                    </svg>
-                                                </button>
-                                                <button @click="deleteUser(user.id)" class="text-slate-500 hover:text-red-400 transition-colors">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                    </svg>
-                                                </button>
-                                            </div>
-                                        </td>
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-secondary fw-semibold text-uppercase small py-3 px-4 border-0">Identifier</th>
+                                        <th class="text-secondary fw-semibold text-uppercase small py-3 px-4 border-0">Protocol Level</th>
+                                        <th class="text-secondary fw-semibold text-uppercase small py-3 px-4 border-0">Initialized At</th>
+                                        <th class="text-secondary fw-semibold text-uppercase small py-3 px-4 border-0 text-end">Actions</th>
                                     </tr>
-                                </template>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody class="border-top-0">
+                                    <template x-for="user in users" :key="user.id">
+                                        <tr>
+                                            <td class="py-3 px-4 border-bottom-0">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="bg-light text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold small shadow-sm" style="width: 32px; height: 32px;" x-text="user.username[0].toUpperCase()"></div>
+                                                    <span class="fw-medium" x-text="user.username"></span>
+                                                </div>
+                                            </td>
+                                            <td class="py-3 px-4 border-bottom-0">
+                                                <span class="badge rounded-pill fw-bold text-uppercase px-2"
+                                                      style="font-size: 0.65rem;"
+                                                      :class="user.role === 'admin' ? 'bg-danger-subtle text-danger' : 'bg-primary-subtle text-primary'"
+                                                      x-text="user.role"></span>
+                                            </td>
+                                            <td class="py-3 px-4 border-bottom-0 text-secondary small" x-text="new Date(user.created_at).toLocaleDateString()"></td>
+                                            <td class="py-3 px-4 border-bottom-0 text-end">
+                                                <div class="d-flex justify-content-end gap-1">
+                                                    <button @click="openModal('user', user)" class="btn btn-sm btn-light text-secondary hover-primary rounded-circle p-2 border-0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button @click="deleteUser(user.id)" class="btn btn-sm btn-light text-secondary hover-danger rounded-circle p-2 border-0">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </section>
             </div>
         </main>
     </div>
 
-    <!-- Topic Modal -->
-    <div class="modal" :class="activeModal === 'topic' ? 'is-active' : ''" x-cloak>
-        <div class="modal-background" @click="closeModal()"></div>
-        <div class="modal-content">
-            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-                <h3 class="title is-4 has-text-white mb-8">Initialize Intelligence Cluster</h3>
-                <form @submit.prevent="createTopic()">
-                    <div class="field mb-6">
-                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Name</label>
-                        <div class="control">
-                            <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="topicForm.name" required>
+    <!-- Modal Backdrop & Base styling via Alpine dynamically adding standard Bootstrap Modal classes -->
+    <div class="modal fade show d-block" style="background: rgba(0,0,0,0.5);" :class="activeModal ? 'visible' : 'd-none'" x-cloak tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            
+            <!-- Topic Modal Content -->
+            <div class="modal-content border-0 shadow rounded-4" x-show="activeModal === 'topic'">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold">Initialize Intelligence Cluster</h5>
+                    <button type="button" class="btn-close" @click="closeModal()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form @submit.prevent="createTopic()">
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold text-uppercase">Cluster Name</label>
+                            <input class="form-control form-control-lg bg-light border-0" type="text" x-model="topicForm.name" required>
                         </div>
-                    </div>
-                    <div class="field mb-8">
-                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Cluster Schema (Description)</label>
-                        <div class="control">
-                            <textarea class="textarea bg-slate-700 border-slate-600 text-white" x-model="topicForm.description" rows="3"></textarea>
+                        <div class="mb-4">
+                            <label class="form-label text-secondary small fw-bold text-uppercase">Cluster Schema (Description)</label>
+                            <textarea class="form-control bg-light border-0" x-model="topicForm.description" rows="3"></textarea>
                         </div>
-                    </div>
-                    <div class="flex justify-end gap-3">
-                        <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                        <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20">Initialize</button>
-                    </div>
-                </form>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-light fw-bold" @click="closeModal()">Abort</button>
+                            <button type="submit" class="btn btn-primary fw-bold px-4 shadow-sm">Initialize</button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- User Modal -->
-    <div class="modal" :class="activeModal === 'user' ? 'is-active' : ''" x-cloak>
-        <div class="modal-background" @click="closeModal()"></div>
-        <div class="modal-content">
-            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-                <h3 class="title is-4 has-text-white mb-8" x-text="isEdit ? 'Update User Details' : 'Add New User'"></h3>
-                <form @submit.prevent="saveUser()">
-                    <div class="field mb-6">
-                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Username</label>
-                        <div class="control">
-                            <input class="input bg-slate-700 border-slate-600 text-white h-12" type="text" x-model="userForm.username" required>
+            <!-- User Modal Content -->
+            <div class="modal-content border-0 shadow rounded-4" x-show="activeModal === 'user'">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold" x-text="isEdit ? 'Update User Details' : 'Add New User'"></h5>
+                    <button type="button" class="btn-close" @click="closeModal()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form @submit.prevent="saveUser()">
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold text-uppercase">Username</label>
+                            <input class="form-control form-control-lg bg-light border-0" type="text" x-model="userForm.username" required>
                         </div>
-                    </div>
-                    <div class="field mb-6">
-                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Password</label>
-                        <div class="control">
-                            <input class="input bg-slate-700 border-slate-600 text-white h-12" type="password" x-model="userForm.password" :required="!isEdit" :placeholder="isEdit ? 'Leave blank to keep unchanged' : ''">
+                        <div class="mb-3">
+                            <label class="form-label text-secondary small fw-bold text-uppercase">Password</label>
+                            <input class="form-control form-control-lg bg-light border-0" type="password" x-model="userForm.password" :required="!isEdit" :placeholder="isEdit ? 'Leave blank to keep unchanged' : ''">
                         </div>
-                    </div>
-                    <div class="field mb-8">
-                        <label class="label has-text-grey-light uppercase text-xs tracking-widest">Access Role</label>
-                        <div class="control">
-                            <div class="select is-fullwidth">
-                                <select class="bg-slate-700 border-slate-600 text-white" x-model="userForm.role">
-                                    <option value="user">Standard Agent</option>
-                                    <option value="admin">Cluster Administrator</option>
-                                </select>
-                            </div>
+                        <div class="mb-4">
+                            <label class="form-label text-secondary small fw-bold text-uppercase">Access Role</label>
+                            <select class="form-select form-select-lg bg-light border-0" x-model="userForm.role">
+                                <option value="user">Standard Agent</option>
+                                <option value="admin">Cluster Administrator</option>
+                            </select>
                         </div>
-                    </div>
 
-                    <!-- Validation Error Display -->
-                    <div x-show="userValidationError" class="mb-6 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-xs font-bold" x-text="userValidationError"></div>
+                        <!-- Validation Error Display -->
+                        <div x-show="userValidationError" class="alert alert-danger py-2 px-3 small fw-bold mb-4 border-0" x-text="userValidationError"></div>
 
-                    <div class="flex justify-end gap-3">
-                        <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                        <button type="submit" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" x-text="isEdit ? 'Update' : 'Add User'" :disabled="userValidationError"></button>
-                    </div>
-                </form>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-light fw-bold" @click="closeModal()">Abort</button>
+                            <button type="submit" class="btn btn-primary fw-bold px-4 shadow-sm" x-text="isEdit ? 'Update' : 'Add User'" :disabled="userValidationError"></button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Assign Modal -->
-    <div class="modal" :class="activeModal === 'assign' ? 'is-active' : ''" x-cloak>
-        <div class="modal-background" @click="closeModal()"></div>
-        <div class="modal-content">
-            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-                <h3 class="title is-4 has-text-white mb-8">Configure Access Protocols</h3>
-                <div class="space-y-4 max-h-96 overflow-y-auto mb-8 pr-4 custom-scrollbar">
-                    <template x-for="user in users" :key="user.id">
-                        <label class="flex items-center justify-between p-4 bg-slate-750 rounded-xl cursor-pointer border border-transparent hover:border-slate-500 transition-all">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center font-bold text-xs" x-text="user.username[0].toUpperCase()"></div>
-                                <div>
-                                    <div class="font-bold text-sm" x-text="user.username"></div>
-                                    <div class="text-[10px] uppercase text-slate-500 tracking-widest font-bold" x-text="user.role"></div>
+            <!-- Assign Modal Content -->
+            <div class="modal-content border-0 shadow rounded-4" x-show="activeModal === 'assign'">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold">Configure Access Protocols</h5>
+                    <button type="button" class="btn-close" @click="closeModal()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="list-group mb-4" style="max-height: 24rem; overflow-y: auto;">
+                        <template x-for="user in users" :key="user.id">
+                            <label class="list-group-item d-flex justify-content-between align-items-center cursor-pointer border-0 bg-light rounded mb-1">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="bg-white text-primary shadow-sm rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 32px; height: 32px;" x-text="user.username[0].toUpperCase()"></div>
+                                    <div>
+                                        <div class="fw-bold small" x-text="user.username"></div>
+                                        <div class="text-uppercase text-secondary" style="font-size: 0.65rem;" x-text="user.role"></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <input type="checkbox" class="w-5 h-5 accent-blue-500" :value="user.id" x-model="assignedUserIds">
-                        </label>
-                    </template>
-                </div>
-                <div class="flex justify-end gap-3">
-                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()">Abort</button>
-                    <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="saveAssignments()">Apply Protocols</button>
+                                <input class="form-check-input mt-0" type="checkbox" :value="user.id" x-model="assignedUserIds" style="width: 1.25rem; height: 1.25rem;">
+                            </label>
+                        </template>
+                    </div>
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-light fw-bold" @click="closeModal()">Abort</button>
+                        <button type="button" class="btn btn-primary fw-bold px-4 shadow-sm" @click="saveAssignments()">Apply Protocols</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Upload Modal -->
-    <div class="modal" :class="activeModal === 'upload' ? 'is-active' : ''" x-cloak>
-        <div class="modal-background" @click="closeModal()"></div>
-        <div class="modal-content">
-            <div class="box bg-slate-800 border border-slate-700 text-white p-10 rounded-2xl shadow-2xl">
-                <h3 class="title is-4 has-text-white mb-8">Ingest Intelligence Feed</h3>
-                <div class="bg-slate-700/50 border-2 border-dashed border-slate-600 rounded-2xl p-8 text-center mb-8 hover:border-blue-500 transition-all group">
-                    <input type="file" id="upload-files" multiple class="hidden" @change="handleFileSelect">
-                    <label for="upload-files" class="cursor-pointer">
-                        <div class="w-16 h-16 bg-slate-700 rounded-2xl mx-auto mb-4 flex items-center justify-center group-hover:bg-blue-600 transition-colors shadow-lg">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-400 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+            <!-- Upload Modal Content -->
+            <div class="modal-content border-0 shadow rounded-4" x-show="activeModal === 'upload'">
+                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                    <h5 class="modal-title fw-bold">Ingest Intelligence Feed</h5>
+                    <button type="button" class="btn-close" @click="closeModal()" aria-label="Close" :disabled="isUploading"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="p-5 text-center bg-light border rounded-4 border-dashed mb-4 position-relative">
+                        <input type="file" id="upload-files" multiple class="position-absolute top-0 start-0 w-100 h-100 opacity-0 cursor-pointer" @change="handleFileSelect" :disabled="isUploading">
+                        <div class="bg-white rounded-3 shadow-sm d-inline-flex align-items-center justify-content-center mb-3 text-primary" style="width: 64px; height: 64px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                             </svg>
                         </div>
-                        <p class="font-bold text-lg mb-1">Upload Data Packets</p>
-                        <p class="text-xs text-slate-400 uppercase tracking-widest">PDF, DOCX, TXT, PPTX, XLSX, MD</p>
-                    </label>
-                </div>
-
-                <div x-show="uploadFiles.length > 0" class="mb-8 space-y-3">
-                    <template x-for="(file, index) in uploadFiles" :key="index">
-                        <div class="flex items-center justify-between p-3 bg-slate-750 rounded-lg text-sm">
-                            <span class="truncate pr-4" x-text="file.name"></span>
-                            <span class="text-slate-500 text-xs flex-shrink-0" x-text="`${(file.size / 1024).toFixed(1)} KB`"></span>
-                        </div>
-                    </template>
-                </div>
-
-                <div x-show="isUploading" class="mb-8">
-                    <div class="flex justify-between text-xs font-bold uppercase tracking-widest mb-2">
-                        <span class="text-blue-400">Ingesting Intelligence...</span>
-                        <span x-text="`${uploadProgress}%`"></p>
+                        <p class="fw-bold text-dark mb-1">Upload Data Packets</p>
+                        <p class="text-secondary small text-uppercase mb-0" style="font-size: 0.7rem;">PDF, DOCX, TXT, PPTX, XLSX, MD</p>
                     </div>
-                    <progress class="progress is-link is-small" :value="uploadProgress" max="100"></progress>
-                </div>
 
-                <div class="flex justify-end gap-3">
-                    <button type="button" class="button is-dark border-slate-600 font-bold" @click="closeModal()" :disabled="isUploading">Abort</button>
-                    <button type="button" class="button is-link font-bold px-8 shadow-lg shadow-blue-600/20" @click="uploadDocuments()" :disabled="isUploading || uploadFiles.length === 0">Sync Node</button>
+                    <div x-show="uploadFiles.length > 0" class="mb-4 d-flex flex-column gap-2">
+                        <template x-for="(file, index) in uploadFiles" :key="index">
+                            <div class="d-flex align-items-center justify-content-between p-2 bg-light rounded small">
+                                <span class="text-truncate pe-3 fw-medium" x-text="file.name"></span>
+                                <span class="text-secondary flex-shrink-0" x-text="`${(file.size / 1024).toFixed(1)} KB`"></span>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div x-show="isUploading" class="mb-4">
+                        <div class="d-flex justify-content-between text-primary small fw-bold text-uppercase mb-2" style="font-size: 0.7rem;">
+                            <span>Ingesting Intelligence...</span>
+                            <span x-text="`${uploadProgress}%`"></span>
+                        </div>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar" :style="`width: ${uploadProgress}%`" :aria-valuenow="uploadProgress" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-light fw-bold" @click="closeModal()" :disabled="isUploading">Abort</button>
+                        <button type="button" class="btn btn-primary fw-bold px-4 shadow-sm" @click="uploadDocuments()" :disabled="isUploading || uploadFiles.length === 0">Sync Node</button>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -562,8 +578,8 @@ function adminApp() {
                         datasets: [{
                             label: 'Indexed Documents',
                             data: this.topics.map(t => t.document_count),
-                            backgroundColor: '#3e8ed0',
-                            borderRadius: 8,
+                            backgroundColor: '#0d6efd',
+                            borderRadius: 4,
                             borderSkipped: false,
                         }]
                     },
@@ -576,12 +592,12 @@ function adminApp() {
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                grid: { color: 'rgba(255,255,255,0.05)' },
-                                ticks: { color: '#94a3b8' }
+                                grid: { color: 'rgba(0,0,0,0.05)' },
+                                ticks: { color: '#6c757d' }
                             },
                             x: {
                                 grid: { display: false },
-                                ticks: { color: '#94a3b8' }
+                                ticks: { color: '#6c757d' }
                             }
                         }
                     }
@@ -604,10 +620,11 @@ function adminApp() {
 }
 </script>
 <style>
-.custom-scrollbar::-webkit-scrollbar { width: 4px; }
-.custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-.custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
-.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
-.bg-slate-750 { background-color: #262a33; }
+.cursor-pointer { cursor: pointer; }
+.hover-danger:hover { color: var(--bs-danger) !important; background-color: rgba(var(--bs-danger-rgb), 0.1) !important; }
+.hover-primary:hover { color: var(--bs-primary) !important; background-color: rgba(var(--bs-primary-rgb), 0.1) !important; }
+.card-hover:hover { transform: translateY(-2px); box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1) !important; border-color: var(--bs-primary) !important; }
+.border-dashed { border-style: dashed !important; border-width: 2px !important; }
+.tracking-widest { letter-spacing: 0.1em; }
 </style>
 {% endblock %}
