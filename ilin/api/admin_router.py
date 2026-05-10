@@ -257,7 +257,7 @@ async def upload_document(
         from ilin.core.rag_engine import RAGEngine
 
         engine = RAGEngine()
-        metadatas, embeddings = engine.index_document(file_path)
+        metadatas, embeddings = engine.index_document(file_path, doc.id)
         engine.add_to_topic_index(topic_id, metadatas, embeddings)
 
         doc.status = "ready"
@@ -309,6 +309,9 @@ def delete_document(
     )
     if doc is None:
         raise HTTPException(status_code=404, detail="Document not found")
+
+    # CHANGED: Remove document chunks from vector store
+    VectorStore(topic_id).delete_document(doc_id)
 
     delete_file(Path(doc.file_path))
 

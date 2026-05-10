@@ -42,10 +42,10 @@ def seed():
         print("Starting RAG document ingestion...")
         engine = RAGEngine()
         topic_id = 1
-        for file_path in source_docs.rglob("*"):
+        for i, file_path in enumerate(source_docs.rglob("*")):
             if file_path.is_file():
                 try:
-                    metadatas, embeddings = engine.index_document(file_path)
+                    metadatas, embeddings = engine.index_document(file_path, document_id=i+1)
                     if embeddings is not None and len(embeddings) > 0:
                         engine.add_to_topic_index(topic_id, metadatas, embeddings)
                         print(f"Successfully indexed {file_path.name}")

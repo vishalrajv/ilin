@@ -20,9 +20,9 @@ def test_add_and_search(vector_store):
     """Add embeddings and search returns results with scores."""
     embeddings = np.random.rand(3, 384).astype(np.float32)
     metadatas = [
-        {"text": "chunk 1", "source": "doc1.pdf"},
-        {"text": "chunk 2", "source": "doc1.pdf"},
-        {"text": "chunk 3", "source": "doc2.pdf"},
+        {"text": "chunk 1", "source": "doc1.pdf", "document_id": 1},
+        {"text": "chunk 2", "source": "doc1.pdf", "document_id": 1},
+        {"text": "chunk 3", "source": "doc2.pdf", "document_id": 2},
     ]
     vector_store.add(embeddings, metadatas)
     assert vector_store.index.ntotal == 3
@@ -37,9 +37,9 @@ def test_search_bm25(vector_store):
     """Test sparse BM25 retrieval for exact terms."""
     embeddings = np.random.rand(3, 384).astype(np.float32)
     metadatas = [
-        {"text": "This contains the magic word BANANA", "source": "doc1.pdf"},
-        {"text": "This contains an apple", "source": "doc1.pdf"},
-        {"text": "This contains a pear", "source": "doc1.pdf"},
+        {"text": "This contains the magic word BANANA", "source": "doc1.pdf", "document_id": 1},
+        {"text": "This contains an apple", "source": "doc1.pdf", "document_id": 1},
+        {"text": "This contains a pear", "source": "doc1.pdf", "document_id": 1},
     ]
     vector_store.add(embeddings, metadatas)
 
@@ -47,6 +47,34 @@ def test_search_bm25(vector_store):
     results = vector_store.search_bm25("BANANA", top_k=1)
     assert len(results) == 1
     assert "BANANA" in results[0]["metadata"]["text"]
+
+def test_delete_document(vector_store):
+    """Test removing a specific document's chunks."""
+    embeddings = np.random.rand(6, 384).astype(np.float32)
+    metadatas = [
+        {"text": "doc1 chunk 1", "document_id": 1},
+        {"text": "doc1 chunk 2", "document_id": 1},
+        {"text": "doc2 chunk 1", "document_id": 2},
+        {"text": "doc3 chunk 1", "document_id": 3},
+        {"text": "doc4 chunk 1", "document_id": 4},
+        {"text": "doc5 chunk 1", "document_id": 5},
+    ]
+    vector_store.add(embeddings, metadatas)
+    assert vector_store.index.ntotal == 6
+
+    # Delete doc 1
+    vector_store.delete_document(1)
+    assert vector_store.index.ntotal == 4
+    assert len(vector_store.metadata) == 4
+    assert all(m["document_id"] != 1 for m in vector_store.metadata)
+    
+    # BM25 should also be updated
+    results = vector_store.search_bm25("doc1")
+    assert len(results) == 0
+    
+    # doc2 appears in 1/4 docs, should have positive IDF
+    results = vector_store.search_bm25("doc2")
+    assert len(results) == 1
 
 def test_search_empty_index(vector_store):
     """Search on empty index returns empty list."""
@@ -57,7 +85,10 @@ def test_search_empty_index(vector_store):
 def test_delete(vector_store):
     """Delete removes index and metadata."""
     embeddings = np.random.rand(2, 384).astype(np.float32)
-    vector_store.add(embeddings, [{"text": "a"}, {"text": "b"}])
+    vector_store.add(embeddings, [
+        {"text": "a", "document_id": 1}, 
+        {"text": "b", "document_id": 1}
+    ])
     vector_store.delete()
     assert vector_store.index is None
     assert vector_store.metadata == []

@@ -28,10 +28,10 @@ def test_hybrid_search(test_retriever, tmp_path, monkeypatch):
 
     # Create chunks
     metadatas = [
-        {"text": "The HTTP protocol is widely used.", "source": "doc1"},
-        {"text": "HTTPS is secure HTTP.", "source": "doc1"},
-        {"text": "TCP IP stack handles transport.", "source": "doc1"},
-        {"text": "XYZACRONYM is a completely random acronym for testing.", "source": "doc2"},
+        {"text": "The HTTP protocol is widely used.", "source": "doc1", "document_id": 1},
+        {"text": "HTTPS is secure HTTP.", "source": "doc1", "document_id": 1},
+        {"text": "TCP IP stack handles transport.", "source": "doc1", "document_id": 1},
+        {"text": "XYZACRONYM is a completely random acronym for testing.", "source": "doc2", "document_id": 2},
     ]
     # Dense embeddings that completely fail (random noise)
     embeddings = np.random.rand(4, 384).astype(np.float32)

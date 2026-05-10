@@ -61,26 +61,19 @@ async def chat_query(
 
     engine = RAGEngine()
     context = engine.retrieve_context(topic_id, message)
-    if not context:
-
-        async def no_context_stream():
-            yield (
-                "data: "
-                + json.dumps(
-                    {
-                        "content": "I don't have enough information to answer that. No relevant documents found.",
-                        "sources": [],
-                    }
-                )
-                + "\n\n"
-            )
-            yield "data: [DONE]\n\n"
-
-        return StreamingResponse(no_context_stream(), media_type="text/event-stream")
-
-    prompt = engine.build_prompt(message, context, chat_history)
 
     async def generate():
+        # CHANGED: Yield session_id in the first chunk
+        yield "data: " + json.dumps({"session_id": session.id}) + "\n\n"
+
+        if not context:
+            yield "data: " + json.dumps({
+                "content": "I don't have enough information to answer that. No relevant documents found.",
+                "sources": []
+            }) + "\n\n"
+            yield "data: [DONE]\n\n"
+            return
+
         full_response = ""
         sources = [
             {
@@ -91,6 +84,9 @@ async def chat_query(
             }
             for r in context
         ]
+        
+        prompt = engine.build_prompt(message, context, chat_history)
+        
         try:
             async for chunk in engine.generate_response(prompt):
                 full_response += chunk
@@ -135,12 +131,23 @@ def get_chat_history(
             "id": s.id,
             "topic_id": s.topic_id,
             "topic_name": s.topic.name if s.topic else "Unknown",
-            "created_at": str(s.created_at),
-            "updated_at": str(s.updated_at),
+            "created_at": s.created_at.isoformat() if s.created_at else None,
+            "updated_at": s.updated_at.isoformat() if s.updated_at else None,
             "message_count": len(s.messages),
         }
         for s in sessions
     ]
+
+
+@router.delete("/history")
+def clear_chat_history(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Clear all chat history for current user."""
+    db.query(ChatSession).filter(ChatSession.user_id == current_user.id).delete()
+    db.commit()
+    return {"message": "Chat history cleared"}
 
 
 @router.get("/history/{session_id}")
@@ -168,6 +175,26 @@ def get_session_messages(
         }
         for m in session.messages
     ]
+
+
+@router.delete("/history/{session_id}")
+def delete_chat_session(
+    session_id: int,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Delete a specific chat session."""
+    session = (
+        db.query(ChatSession)
+        .filter(ChatSession.id == session_id, ChatSession.user_id == current_user.id)
+        .first()
+    )
+    if session is None:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    db.delete(session)
+    db.commit()
+    return {"message": "Session deleted"}
 
 
 @router.get("/history/{session_id}/export")

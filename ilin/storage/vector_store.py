@@ -63,6 +63,11 @@ class VectorStore:
         if embeddings.ndim == 1:
             embeddings = embeddings.reshape(1, -1)
 
+        # CHANGED: Verify document_id exists in metadata
+        for meta in metadatas:
+            if "document_id" not in meta:
+                raise ValueError("Every metadata dictionary must include 'document_id'")
+
         self.index.add(np.ascontiguousarray(embeddings, dtype=np.float32))
         self.metadata.extend(metadatas)
         
@@ -74,6 +79,48 @@ class VectorStore:
             from rank_bm25 import BM25Okapi
             self.bm25 = BM25Okapi(self.bm25_corpus)
             
+        self._save()
+
+    def delete_document(self, document_id: int):
+        """Remove all chunks belonging to a specific document and rebuild index."""
+        if self.index is None or not self.metadata:
+            return
+
+        # 1. Identify indices to keep
+        keep_indices = [
+            i for i, meta in enumerate(self.metadata) 
+            if meta.get("document_id") != document_id
+        ]
+
+        if len(keep_indices) == len(self.metadata):
+            return  # Nothing to delete
+
+        # 2. Extract vectors and metadata to keep
+        new_metadata = [self.metadata[i] for i in keep_indices]
+        new_bm25_corpus = [self.bm25_corpus[i] for i in keep_indices]
+        
+        if not keep_indices:
+            # Everything was deleted
+            self.index = None
+            self.metadata = []
+            self.bm25_corpus = []
+            self.bm25 = None
+        else:
+            # Reconstruct keep vectors
+            keep_vectors = np.array([self.index.reconstruct(i) for i in keep_indices])
+            
+            # 3. Rebuild FAISS index (IndexFlatIP doesn't support easy removals)
+            dim = keep_vectors.shape[1]
+            self.index = faiss.IndexFlatIP(dim)
+            self.index.add(np.ascontiguousarray(keep_vectors, dtype=np.float32))
+            
+            self.metadata = new_metadata
+            self.bm25_corpus = new_bm25_corpus
+            
+            # 4. Re-initialize BM25
+            from rank_bm25 import BM25Okapi
+            self.bm25 = BM25Okapi(self.bm25_corpus)
+
         self._save()
 
     def search(

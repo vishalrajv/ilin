@@ -28,7 +28,7 @@ class RAGEngine:
             self.llm = get_llm_backend()
         return self.llm
 
-    def index_document(self, file_path: Path) -> tuple[list[dict], any]:
+    def index_document(self, file_path: Path, document_id: int) -> tuple[list[dict], any]:
         """Parse, chunk, and embed a document. Returns (metadatas, embeddings)."""
         # Parse
         text_chunks = ParserRegistry.parse_file(file_path)
@@ -46,6 +46,7 @@ class RAGEngine:
                 "text": c.text,
                 "source_file": c.source_file,
                 "page_number": c.page_number,
+                "document_id": document_id,  # CHANGED: Added document_id
                 "metadata": c.metadata,
             }
             for c in split_chunks
