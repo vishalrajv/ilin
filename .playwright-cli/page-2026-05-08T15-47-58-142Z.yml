@@ -1,0 +1,32 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: I
+      - heading "ILIN" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - button "Knowledge Bases" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Knowledge Bases
+        - button "Recent Inquiries" [active] [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Recent Inquiries
+    - button "Disconnect" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - generic [ref=e21]: Disconnect
+  - main [ref=e22]:
+    - generic [ref=e96]:
+      - generic [ref=e97]:
+        - heading "Intelligence Logs" [level=1] [ref=e98]
+        - button "Clear All History" [ref=e99] [cursor=pointer]
+      - generic [ref=e102] [cursor=pointer]:
+        - generic [ref=e103]:
+          - img [ref=e105]
+          - generic [ref=e107]:
+            - heading "SWCS" [level=3] [ref=e108]
+            - paragraph [ref=e109]: 3 messages • 5/8/2026, 3:47:07 PM
+        - generic [ref=e110]:
+          - button "Export" [ref=e111]:
+            - img [ref=e112]
+          - button "Delete" [ref=e114]:
+            - img [ref=e115]

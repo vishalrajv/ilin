@@ -1,0 +1,20 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: I
+      - heading "ILIN" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - button "Knowledge Bases" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Knowledge Bases
+        - button "Recent Inquiries" [active] [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Recent Inquiries
+    - button "Disconnect" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - generic [ref=e21]: Disconnect
+  - main [ref=e22]:
+    - generic [ref=e160]:
+      - heading "Intelligence Logs" [level=1] [ref=e162]
+      - paragraph [ref=e165]: No previous intelligence logs found.

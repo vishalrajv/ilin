@@ -1,0 +1,28 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: I
+      - heading "ILIN" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - button "Knowledge Bases" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Knowledge Bases
+        - button "Recent Inquiries" [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Recent Inquiries
+    - button "Disconnect" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - generic [ref=e21]: Disconnect
+  - main [ref=e22]:
+    - generic [ref=e260]:
+      - generic [ref=e261]:
+        - heading "Intelligence Hub" [level=1] [ref=e262]
+        - paragraph [ref=e263]: Select a knowledge base to initiate a local intelligence query.
+      - generic [ref=e267] [cursor=pointer]:
+        - img [ref=e269]
+        - heading "SWCS" [level=3] [ref=e271]
+        - paragraph [ref=e272]: Shallow Water Craft system
+        - generic [ref=e273]:
+          - generic [ref=e274]: 1 Docs
+          - generic [ref=e276]: Indexed Node

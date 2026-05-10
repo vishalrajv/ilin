@@ -1,0 +1,57 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: I
+      - heading "ILIN" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - button "Knowledge Bases" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Knowledge Bases
+        - button "Recent Inquiries" [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Recent Inquiries
+    - button "Disconnect" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - generic [ref=e21]: Disconnect
+  - main [ref=e22]:
+    - generic [ref=e41]:
+      - generic [ref=e43]:
+        - button [ref=e44] [cursor=pointer]:
+          - img [ref=e45]
+        - generic [ref=e47]:
+          - heading "SWCS" [level=2] [ref=e48]
+          - paragraph [ref=e49]:
+            - status [ref=e50]
+            - text: Active Node Session
+      - generic [ref=e52]:
+        - generic [ref=e64]:
+          - generic [ref=e66]: U
+          - generic [ref=e69]: What is SWCS?
+        - generic [ref=e72]: AI
+        - generic [ref=e79]:
+          - generic [ref=e81]: U
+          - generic [ref=e84]: What is SWCS?
+        - generic [ref=e87]: AI
+        - generic [ref=e94]:
+          - generic [ref=e96]: U
+          - generic [ref=e99]: Hello
+        - generic [ref=e102]: AI
+        - generic [ref=e109]:
+          - generic [ref=e111]: U
+          - generic [ref=e114]: Hello
+        - generic [ref=e115]:
+          - generic [ref=e117]: AI
+          - generic [ref=e120]:
+            - status [ref=e121]
+            - status [ref=e122]
+            - status [ref=e123]
+      - generic [ref=e53]:
+        - generic [ref=e54]:
+          - textbox "Inquire with the Node..." [disabled] [ref=e55]
+          - generic [ref=e56]:
+            - button "Stop Generation" [ref=e57] [cursor=pointer]:
+              - img [ref=e58]
+            - button [disabled]:
+              - img
+        - paragraph [ref=e60]: Local Inference Engine • ILIN Integrated Intelligence

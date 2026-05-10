@@ -1,0 +1,62 @@
+- generic [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: A
+      - heading "ILIN Admin" [level=2] [ref=e7]
+    - navigation [ref=e8]:
+      - generic [ref=e9]:
+        - button "Node Overview" [ref=e10] [cursor=pointer]:
+          - img [ref=e11]
+          - generic [ref=e13]: Node Overview
+        - button "Knowledge Bases" [ref=e14] [cursor=pointer]:
+          - img [ref=e15]
+          - generic [ref=e17]: Knowledge Bases
+        - button "Authorized Users" [active] [ref=e18] [cursor=pointer]:
+          - img [ref=e19]
+          - generic [ref=e21]: Authorized Users
+    - button "Terminate Session" [ref=e23] [cursor=pointer]:
+      - img [ref=e24]
+      - generic [ref=e26]: Terminate Session
+  - main [ref=e27]:
+    - generic [ref=e54]:
+      - generic [ref=e55]:
+        - generic [ref=e56]:
+          - heading "Authorized Entities" [level=1] [ref=e57]
+          - paragraph [ref=e58]: Manage access protocols for node intelligence.
+        - button "+ Add User" [ref=e59] [cursor=pointer]
+      - table [ref=e62]:
+        - rowgroup [ref=e63]:
+          - row "Identifier Protocol Level Initialized At Actions" [ref=e64]:
+            - columnheader "Identifier" [ref=e65]
+            - columnheader "Protocol Level" [ref=e66]
+            - columnheader "Initialized At" [ref=e67]
+            - columnheader "Actions" [ref=e68]
+        - rowgroup [ref=e69]:
+          - row "A admin admin 4/2/2026" [ref=e70]:
+            - cell "A admin" [ref=e71]:
+              - generic [ref=e72]:
+                - generic [ref=e73]: A
+                - generic [ref=e74]: admin
+            - cell "admin" [ref=e75]:
+              - generic [ref=e76]: admin
+            - cell "4/2/2026" [ref=e77]
+            - cell [ref=e78]:
+              - generic [ref=e79]:
+                - button [ref=e80] [cursor=pointer]:
+                  - img [ref=e81]
+                - button [ref=e83] [cursor=pointer]:
+                  - img [ref=e84]
+          - row "V vishal user 4/23/2026" [ref=e86]:
+            - cell "V vishal" [ref=e87]:
+              - generic [ref=e88]:
+                - generic [ref=e89]: V
+                - generic [ref=e90]: vishal
+            - cell "user" [ref=e91]:
+              - generic [ref=e92]: user
+            - cell "4/23/2026" [ref=e93]
+            - cell [ref=e94]:
+              - generic [ref=e95]:
+                - button [ref=e96] [cursor=pointer]:
+                  - img [ref=e97]
+                - button [ref=e99] [cursor=pointer]:
+                  - img [ref=e100]

@@ -1,0 +1,32 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: I
+      - heading "ILIN" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - button "Knowledge Bases" [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Knowledge Bases
+        - button "Recent Inquiries" [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Recent Inquiries
+    - button "Disconnect" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - generic [ref=e21]: Disconnect
+  - main [ref=e22]:
+    - generic [ref=e224]:
+      - generic [ref=e226]:
+        - button [ref=e227] [cursor=pointer]:
+          - img [ref=e228]
+        - generic [ref=e230]:
+          - heading "SWCS" [level=2] [ref=e231]
+          - paragraph [ref=e232]:
+            - status [ref=e233]
+            - text: Active Node Session
+      - generic [ref=e236]:
+        - generic [ref=e237]:
+          - textbox "Inquire with the Node..." [ref=e238]
+          - button [disabled]:
+            - img
+        - paragraph [ref=e239]: Local Inference Engine • ILIN Integrated Intelligence

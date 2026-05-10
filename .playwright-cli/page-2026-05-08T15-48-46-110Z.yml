@@ -1,0 +1,45 @@
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e5]: I
+      - heading "ILIN" [level=2] [ref=e6]
+    - navigation [ref=e7]:
+      - generic [ref=e8]:
+        - button "Knowledge Bases" [active] [ref=e9] [cursor=pointer]:
+          - img [ref=e10]
+          - generic [ref=e12]: Knowledge Bases
+        - button "Recent Inquiries" [ref=e13] [cursor=pointer]:
+          - img [ref=e14]
+          - generic [ref=e16]: Recent Inquiries
+    - button "Disconnect" [ref=e18] [cursor=pointer]:
+      - img [ref=e19]
+      - generic [ref=e21]: Disconnect
+  - main [ref=e22]:
+    - generic [ref=e166]:
+      - generic [ref=e168]:
+        - button [ref=e169] [cursor=pointer]:
+          - img [ref=e170]
+        - generic [ref=e172]:
+          - heading "SWCS" [level=2] [ref=e173]
+          - paragraph [ref=e174]:
+            - status [ref=e175]
+            - text: Active Node Session
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - generic [ref=e180]: U
+          - generic [ref=e183]: What is SWCS?
+        - generic [ref=e184]:
+          - generic [ref=e186]: AI
+          - generic [ref=e189]: I don't have enough information to answer that. No relevant documents found.
+        - generic [ref=e190]:
+          - generic [ref=e192]: U
+          - generic [ref=e195]: Tell me more.
+        - generic [ref=e196]:
+          - generic [ref=e198]: AI
+          - generic [ref=e201]: I don't have enough information to answer that. No relevant documents found.
+      - generic [ref=e202]:
+        - generic [ref=e203]:
+          - textbox "Inquire with the Node..." [ref=e204]
+          - button [disabled]:
+            - img
+        - paragraph [ref=e205]: Local Inference Engine • ILIN Integrated Intelligence

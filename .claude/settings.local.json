@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(playwright-cli)",
+      "Bash(playwright-cli open *)",
+      "Bash(playwright-cli snapshot *)",
+      "Bash(playwright-cli localstorage-list *)",
+      "Bash(playwright-cli fill *)",
+      "Bash(playwright-cli click *)",
+      "Bash(playwright-cli goto *)",
+      "Bash(playwright-cli press *)",
+      "Bash(playwright-cli close *)"
+    ]
+  }
+}
